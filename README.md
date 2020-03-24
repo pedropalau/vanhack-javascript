@@ -1,6 +1,6 @@
 # VanHack JavaScript
 
-A simple JavaScript solution for the VanHack events-like application exercise
+A simple JavaScript solution for the VanHack events-like application exercise.
 
 [![Deploy with ZEIT Now](https://zeit.co/button)](https://zeit.co/import/project?template=https://github.com/peterpalau/vanhack-javascript)
 
