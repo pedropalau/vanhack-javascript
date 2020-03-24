@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VanHack Platform · Events</title>
+    <link rel="stylesheet" type="text/css" href="https://rsms.me/inter/inter.css" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body class="bg-gray-100">
+    <div class="text-sm bg-gray-900 text-gray-100 shadow-md shadow-inset md:text-base">
+        <div class="py-2 md:py-4 px-8 text-center">
+            <em class="text-yellow-500 not-italic font-medium">COVID-19:</em> VanHack has decided not to host any
+            in-person events until further notice. <a class="underline hover:text-yellow-500" href="#">Read more</a>
+        </div>
+    </div>
+    <header class="w-full bg-white lg:bg-transparent lg:absolute lg:left-0 lg:right-0" role="banner">
+        <div class="container mx-auto">
+            <nav
+                class="px-4 py-6 relative z-50 overflow-hidden md:py-0 md:bg-white md:flex md:items-center md:h-20 md:px-8 lg:rounded-md lg:shadow-lg lg:max-w-screen-lg lg:mx-auto lg:mt-10">
+                <div class="flex items-center">
+                    <a class="flex items-center flex-1" href="https://vanhack.com/" title="VanHack homepage">
+                        <strong class="font-bold text-lg text-gray-900">VanHack</strong>
+                    </a>
+                    <div class="flex items-center md:hidden">
+                        <label class="cursor-pointer p-2 rounded-md text-gray-700 hover:bg-gray-200 hover:text-blue-700"
+                            for="mainMenuToggle">
+                            <svg class="stroke-current" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </label>
+                        <label class="cursor-pointer p-2 rounded-md text-gray-700 hover:bg-gray-200 hover:text-blue-700"
+                            for="userAccountMenuToggle">
+                            <svg class="stroke-current" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex-1 md:flex md:items-center">
+                    <input type="checkbox" class="sr-only" name="mainMenuToggle" id="mainMenuToggle" />
+                    <ul id="mainMenu" class="-mx-4 text-lg pt-4 md:pt-0 md:text-base md:mx-0 md:flex md:items-center md:flex-1 md:justify-center">
+                        <li>
+                            <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                href="https://vanhack.com/platform/#/jobs">Jobs</a>
+                        </li>
+                        <li>
+                            <span class="block text-gray-900 py-3 px-4 d:px-3 md:py-2">Events</span>
+                        </li>
+                        <li>
+                            <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                href="https://vanhack.com/platform/#/jobs">Jobs pipeline</a>
+                        </li>
+                        <li>
+                            <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                href="http://vanhack.com/join-slack">Slack</a>
+                        </li>
+                        <li>
+                            <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                href="https://vanhack.com/referral">Referral</a>
+                        </li>
+                        <li class="relative">
+                            <a class="hidden cursor-pointer block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2 md:block"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                            <ul
+                                class="md:hidden md:bg-white md:shadow-lg md:absolute md:top-0 md:left-0 md:mt-10 md:py-4 md:rounded">
+                                <li>
+                                    <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                        href="https://vanhack.com/platform/course">Courses</a>
+                                </li>
+                                <li>
+                                    <a class="block text-gray-700 py-3 px-4 hover:bg-gray-200 hover:text-blue-500 md:hover:bg-transparent md:px-3 md:py-2"
+                                        href="https://vanhack.com/platform/library">Library</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <input type="checkbox" class="sr-only" name="userAccountMenuToggle" id="userAccountMenuToggle" />
+                    <label id="userAccountMenuBackdrop"
+                        class="fixed top-0 right-0 bottom-0 left-0 bg-black opacity-50 cursor-pointer md:hidden"
+                        for="userAccountMenuToggle">
+                        <div class="absolute left-0 right-0 flex p-5">
+                            <svg class="text-white stroke-current" viewBox="0 0 24 24" width="32" height="32"
+                                stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </div>
+                    </label>
+                    <div id="userAccountMenu"
+                        class="fixed top-0 right-0 bottom-0 z-50 w-3/4 bg-white flex flex-col shadow-xl md:shadow-none md:block md:relative md:top-auto md:right-0 md:bottom-auto md:z-0 md:w-auto md:bg-transparent">
+                        <div class="flex items-center p-6 border-b border-gray-300 md:border-b-0 md:border-transparent md:p-0 md:justify-end md:cursor-pointer"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="block w-6 h-6 rounded-full"
+                                src="https://vanhackblobstorageprod.blob.core.windows.net/img/User/d4cbf7d5-0fbb-434a-895b-83c40c85e113.jpg" />
+                            <span class="block ml-2 font-medium md:font-normal">My account</span>
+                        </div>
+                        <ul
+                            class="flex flex-col flex-1 md:block md:hidden md:w-48 md:bg-white md:shadow-lg md:absolute md:top-0 md:right-0 md:mt-12 md:py-4 md:rounded">
+                            <li>
+                                <a class="block px-6 py-4 leading-tight text-gray-700 hover:bg-gray-100 hover:text-blue-500 md:py-2"
+                                    href="#">Profile</a>
+                            </li>
+                            <li>
+                                <a class="block px-6 py-4 leading-tight text-gray-700 hover:bg-gray-100 hover:text-blue-500 md:py-2"
+                                    href="#">Referral</a>
+                            </li>
+                            <li>
+                                <a class="block px-6 py-4 leading-tight text-gray-700 hover:bg-gray-100 hover:text-blue-500 md:py-2"
+                                    href="#">English verification</a>
+                            </li>
+                            <li>
+                                <a class="block px-6 py-4 leading-tight text-gray-700 hover:bg-gray-100 hover:text-blue-500 md:py-2"
+                                    href="#">Code verification</a>
+                            </li>
+                            <li>
+                                <a class="block px-6 py-4 leading-tight text-gray-700 hover:bg-gray-100 hover:text-blue-500 md:py-2"
+                                    href="#">Account settings</a>
+                            </li>
+                            <li class="flex-1 flex justify-end flex-col p-4 md:block md:p-0">
+                                <a class="text-center block px-6 py-4 leading-tight border-2 border-blue-500 text-blue-700 font-medium rounded-md hover:bg-blue-500 hover:text-blue-100 md:rounded-none md:border-0 md:text-gray-700 md:font-normal md:hover:bg-gray-100 md:hover:text-blue-500 md:text-left md:py-2"
+                                    href="#">Become premium</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main class="relative z-10" role="main">
+        <section
+            class="relative bg-blue-500 text-white py-20 bg-center bg-cover overflow-hidden md:h-screen md:flex md:items-center"
+            style="background-image: url('https://images.unsplash.com/photo-1557804506-d8017c1e4856?sat=-100&blend-mode=multiply&blend=2c5282');">
+            <div class="absolute top-0 left-0 w-full h-full bg-blue-700 opacity-50 z-0"></div>
+            <div class="container mx-auto px-8 relative z-10 lg:pt-24">
+                <div class="w-full max-w-screen-sm mx-auto text-center">
+                    <h1 class="text-4xl font-bold mb-4 md:text-5xl">VanHack Events</h1>
+                    <p class="text-lg font-light text-blue-100 lg:text-2xl lg:leading-tight">Check out our upcomming
+                        events and connect with the best companies that wants to relocate you to work in Canada and
+                        Europe.</p>
+                    <p class="flex items-center justify-center pt-10">
+                        <a class="block px-6 py-3 bg-white text-gray-900 text-lg font-medium shadow-md rounded-md hover:bg-black hover:text-blue-100"
+                            href="#events">
+                            View events
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <div class="border-b bg-white">
+            <div class="container mx-auto px-8">
+                <div class="py-6 flex flex-wrap justify-center md:items-center">
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">MeetUp</a>
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">Leap</a>
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">Recruiting mission</a>
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">VanHackathon</a>
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">Premium-only webinar</a>
+                    <a class="block px-4 py-1 rounded-md border border-gray-300 bg-gray-100 m-1 text-gray-800 hover:bg-white hover:border-gray-500 hover:text-gray-900"
+                        href="#">Webinar</a>
+                </div>
+            </div>
+        </div>
+        <section class="py-10">
+            <div class="container mx-auto px-8">
+                <div class="md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-10">
+                    <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0">
+                        <div class="flex-1">
+                            <img class="w-full h-auto"
+                                src="https://images.unsplash.com/photo-1559511260-66a654ae982a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1992&q=100&w=400&h=300" />
+                        </div>
+                        <div class="fle flex-col">
+                            <div class="p-4 flex items-center md:border-b md:border-gray-200">
+                                <h3 class="font-bold text-lg flex-1 leading-tight">
+                                    <a class="text-gray-900 block" href="#">Virtual Hiring Fair</a>
+                                    <span
+                                        class="inline-block text-xs rounded-full bg-orange-100 text-orange-700 border border-orange-500 px-2 leading-normal mt-2 font-medium">Recruiting
+                                        mission</span>
+                                </h3>
+                                <a class="flex flex-col items-center justify-center leading-none mt-1" href="#">
+                                    <span class="block uppercase text-xs tracking-wider text-gray-700">April</span>
+                                    <span class="block font-bold text-4xl text-gray-900 tracking-tight">25</span>
+                                </a>
+                            </div>
+                            <div class="bg-gray-200 px-4 text-xs py-2 text-gray-700">
+                                This events is from April 25 to 26
+                            </div>
+                            <div class="p-4 text-sm md:border-b md:border-gray-200">
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="font-medium">Location</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">Vancouver, Canada</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="flex-auto font-medium">Deadline</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">April 24, 2020</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4">
+                                <a class="block px-4 py-2 border-2 border-blue-500 text-center rounded-md mt-4 text-blue-700 font-medium hover:bg-blue-700 hover:text-white hover:border-transparent"
+                                    href="#">Apply now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0">
+                        <div class="flex-1">
+                            <img class="w-full h-auto"
+                                src="https://images.unsplash.com/photo-1507992781348-310259076fe0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1992&q=100&w=400&h=300" />
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="p-4 flex items-center md:border-b md:border-gray-200">
+                                <h3 class="font-bold text-lg flex-1 leading-tight">
+                                    <a class="text-gray-900 block" href="#">Virtual Hiring Fair</a>
+                                    <span
+                                        class="inline-block text-xs rounded-full bg-green-100 text-green-700 border-green-500 border px-2 leading-normal mt-2 font-medium">Webinar</span>
+                                </h3>
+                                <a class="flex flex-col items-center justify-center leading-none mt-1" href="#">
+                                    <span class="block uppercase text-xs tracking-wider text-gray-700">April</span>
+                                    <span class="block font-bold text-4xl text-gray-900 tracking-tight">25</span>
+                                </a>
+                            </div>
+                            <div class="bg-gray-200 px-4 text-xs py-2 text-gray-700">
+                                This events is from April 25 to 26
+                            </div>
+                            <div class="p-4 text-sm md:border-b md:border-gray-200">
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="font-medium">Location</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">Vancouver, Canada</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="flex-auto font-medium">Deadline</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">April 24, 2020</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4">
+                                <a class="block px-4 py-2 border-2 border-blue-500 text-center rounded-md mt-4 text-blue-700 font-medium hover:bg-blue-700 hover:text-white hover:border-transparent"
+                                    href="#">Apply now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0">
+                        <div class="flex-1">
+                            <img class="w-full h-auto"
+                                src="https://images.unsplash.com/photo-1560969184-10fe8719e047?ixlib=rb-1.2.1&auto=format&fit=crop&w=1992&q=100&w=400&h=300" />
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="p-4 flex items-center md:border-b md:border-gray-200">
+                                <h3 class="font-bold text-lg flex-1 leading-tight">
+                                    <a class="text-gray-900 block" href="#">Virtual Hiring Fair</a>
+                                    <span
+                                        class="inline-block text-xs rounded-full bg-indigo-100 text-indigo-700 border-indigo-500 border px-2 leading-normal mt-2 font-medium">Meetup</span>
+                                </h3>
+                                <a class="flex flex-col items-center justify-center leading-none mt-1" href="#">
+                                    <span class="block uppercase text-xs tracking-wider text-gray-700">April</span>
+                                    <span class="block font-bold text-4xl text-gray-900 tracking-tight">25</span>
+                                </a>
+                            </div>
+                            <div class="bg-gray-200 px-4 text-xs py-2 text-gray-700">
+                                This events is from April 25 to 26
+                            </div>
+                            <div class="p-4 text-sm md:border-b md:border-gray-200">
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="font-medium">Location</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">Vancouver, Canada</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="flex-auto font-medium">Deadline</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">April 24, 2020</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4">
+                                <a class="block px-4 py-2 border-2 border-blue-500 text-center rounded-md mt-4 text-blue-700 font-medium hover:bg-blue-700 hover:text-white hover:border-transparent"
+                                    href="#">Apply now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0">
+                        <div class="flex-1">
+                            <img class="w-full h-auto"
+                                src="https://images.unsplash.com/photo-1566823445127-e48e6a5e7af2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1992&q=100&w=400&h=300" />
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="p-4 flex items-center md:border-b md:border-gray-200">
+                                <h3 class="font-bold text-lg flex-1 leading-tight">
+                                    <a class="text-gray-900 block" href="#">May leap</a>
+                                    <span
+                                        class="inline-block text-xs rounded-full bg-pink-100 text-pink-700 border-pink-500 border px-2 leading-normal mt-2 font-medium">Leap</span>
+                                </h3>
+                                <a class="flex flex-col items-center justify-center leading-none mt-1" href="#">
+                                    <span class="block uppercase text-xs tracking-wider text-gray-700">May</span>
+                                    <span class="block font-bold text-4xl text-gray-900 tracking-tight">25</span>
+                                </a>
+                            </div>
+                            <div class="bg-gray-200 px-4 text-xs py-2 text-gray-700">
+                                This events is from May 25 to 26
+                            </div>
+                            <div class="p-4 text-sm md:border-b md:border-gray-200">
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="font-medium">Location</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">Toronto, Canada</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center pt-1">
+                                    <div class="w-4 mr-2">
+                                        <svg class="text-blue-500 w-full h-auto stroke-current" viewBox="0 0 24 24"
+                                            width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 flex items-center">
+                                        <div class="flex-auto font-medium">Deadline</div>
+                                        <span class="block flex-1 border-t-2 border-dashed mx-2"></span>
+                                        <div class="text-gray-700">April 24, 2020</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-4 pb-4">
+                                <a class="block px-4 py-2 border-2 border-blue-500 text-center rounded-md mt-4 text-blue-700 font-medium hover:bg-blue-700 hover:text-white hover:border-transparent"
+                                    href="#">Apply now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white py-4 shadow-sm relative z-10">
+            <div class="container mx-auto px-8 py-10">
+                <div class="max-w-screen-lg mx-auto md:grid md:grid-cols-3 md:gap-10">
+                    <div class="flex flex-col text-center">
+                        <div class="w-10 mb-6 mx-auto">
+                            <svg class="w-full h-auto text-green-500 stroke-current" viewBox="0 0 24 24" width="24"
+                                height="24" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline class="text-green-300" points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Save time</h3>
+                        <p class="text-gray-600">In 24 hours or less, get the best highly qualified candidates
+                            hard-to-fill tech roles from around the world.</p>
+                    </div>
+                    <div class="flex flex-col text-center pt-10 md:pt-0">
+                        <div class="w-10 mb-6 mx-auto">
+                            <svg class="w-full h-auto text-green-500 stroke-current" viewBox="0 0 24 24" width="24"
+                                height="24" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line class="text-green-300" x1="2" y1="12" x2="22" y2="12"></line>
+                                <path class="text-green-300"
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Big talent pool</h3>
+                        <p class="text-gray-600">Have access to a professional pool of more than +127,823 candidates
+                            from over
+
+                            100+ countries.</p>
+                    </div>
+                    <div class="flex flex-col text-center pt-10 md:pt-0">
+                        <div class="w-10 mb-6 mx-auto">
+                            <svg class="w-full h-auto text-green-500 stroke-current" viewBox="0 0 24 24" width="24"
+                                height="24" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                <path class="text-green-300" d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Get success</h3>
+                        <p class="text-gray-600">More than the 30% of jobs posted on VanHack get filled by amazing
+                            professionals people.</p>
+                    </div>
+                </div>
+                <div class="w-full flex justify-center items-center px-8 pt-10">
+                    <a class="bg-blue-500 text-center text-white block px-6 py-2 rounded hover:bg-blue-600 hover:text-blue-100"
+                        href="https://vanhack.com/platform/#/jobs">
+                        Start recruiting today
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="py-10 bg-gray-200 relative z-0">
+            <div class="container mx-auto px-8 py-10">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold mb-1">Success stories</h2>
+                    <p class="text-lg text-gray-600">Discover why these companies trust VanHack with their hardest to
+                        fill roles.</p>
+                </div>
+                <div class="pt-16 md:grid md:grid-cols-2 md:gap-10 lg:grid-cols-4 lg:gap-6">
+                    <div class="flex flex-col bg-white shadow-md rounded-md overflow-hidden">
+                        <div class="p-6 border-b border-gray-200 flex items-center rounded-t-md w-full">
+                            <img class="block rounded-full w-12 h-12"
+                                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?dpr=1&auto=format&fit=crop&w=120&h=120&q=100&crop=faces&bg=fff"
+                                alt="Greg Smith" />
+                            <div class="pl-4">
+                                <h3 class="font-bold text-lg">Greg Smith</h3>
+                                <h4 class="text-sm text-blue-500">CEO, Thinkific</h4>
+                            </div>
+                        </div>
+                        <div class="p-6 md:h-24 md:overflow-hidden">
+                            <p class="text-sm text-gray-600 leading-snug m-h-full">I've gone from interviewing a small
+                                number of people and thinking that it's maybe not quite a fit to interviewing a ton of
+                                people and having the ability to pick and choose from an amazing pool of candidates.</p>
+                        </div>
+                        <div class="px-6 pb-6 pt-2 w-full md:mt-auto hidden md:block">
+                            <a class="tracking-wide uppercase font-bold text-xs inline-flex py-2 text-blue-500 hover:text-gray-900"
+                                href="#">View more</a>
+                        </div>
+                    </div>
+                    <div class="flex flex-col bg-white shadow-md rounded-md items-center overflow-hidden mt-6 md:mt-0">
+                        <div class="p-6 border-b border-gray-200 flex items-center rounded-t-md w-full">
+                            <img class="block rounded-full w-12 h-12"
+                                src="https://images.unsplash.com/photo-1548142813-c348350df52b?dpr=1&auto=format&fit=crop&w=120&h=120&q=100&crop=faces&bg=fff"
+                                alt="Jane Lee" />
+                            <div class="pl-4">
+                                <h3 class="font-bold text-lg">Jane Lee</h3>
+                                <h4 class="text-sm text-blue-500 leading-tight">Hiring Manager, Clio</h4>
+                            </div>
+                        </div>
+                        <div class="p-6 md:h-24 md:overflow-hidden">
+                            <p class="text-sm text-gray-600 leading-snug m-h-full">Working with VanHack was great. They
+                                had a selection of developers with great technical skills and seemed like great culture
+                                contributors. We were able to hire 2 developers - at intermediate and senior levels. The
+                                VanHack team was responsive and a pleasure to work with.</p>
+                        </div>
+                        <div class="px-6 pb-6 pt-2 w-full md:mt-auto hidden md:block">
+                            <a class="tracking-wide uppercase font-bold text-xs inline-flex py-2 text-blue-500 hover:text-gray-900"
+                                href="#">View more</a>
+                        </div>
+                    </div>
+                    <div class="flex flex-col bg-white shadow-md rounded-md items-center overflow-hidden mt-6 md:mt-0">
+                        <div class="p-6 border-b border-gray-200 flex items-center rounded-t-md w-full">
+                            <img class="block rounded-full w-12 h-12"
+                                src="https://images.unsplash.com/photo-1544348817-5f2cf14b88c8?dpr=1&auto=format&fit=crop&w=120&h=120&q=100&crop=faces&bg=fff"
+                                alt="Greg Smith" />
+                            <div class="pl-4">
+                                <h3 class="font-bold text-lg">Arlin Dueck</h3>
+                                <h4 class="text-sm text-blue-500 leading-tight">Director of Talent Acquisition</h4>
+                            </div>
+                        </div>
+                        <div class="p-6 md:h-24 md:overflow-hidden">
+                            <p class="text-sm text-gray-600 leading-snug m-h-full">As VanHack possesses a true
+                                understanding of the tech industry, they easily built credibility with our tech team and
+                                broader leadership. Their attention to process extended beyond the point of their tech
+                                candidates putting pen to paper on offers.</p>
+                        </div>
+                        <div class="px-6 pb-6 pt-2 w-full md:mt-auto hidden md:block">
+                            <a class="tracking-wide uppercase font-bold text-xs inline-flex py-2 text-blue-500 hover:text-gray-900"
+                                href="#">View more</a>
+                        </div>
+                    </div>
+                    <div class="flex flex-col bg-white shadow-md rounded-md items-center overflow-hidden mt-6 md:mt-0">
+                        <div class="p-6 border-b border-gray-200 flex items-center rounded-t-md w-full">
+                            <img class="block rounded-full w-12 h-12"
+                                src="https://images.unsplash.com/photo-1463453091185-61582044d556?dpr=1&auto=format&fit=crop&w=120&h=120&q=100&crop=faces&bg=fff"
+                                alt="Manu Varma" />
+                            <div class="pl-4 ">
+                                <h3 class="font-bold text-lg">Manu Varma</h3>
+                                <h4 class="text-sm text-blue-500 leading-tight">Head of People & Culture</h4>
+                            </div>
+                        </div>
+                        <div class="p-6 md:h-24 md:overflow-hidden">
+                            <p class="text-sm text-gray-600 leading-snug m-h-full">We have used VanHack's services on
+                                several occasions and they have been successful in bringing us candidates that fit into
+                                our culture driven, values based company at Traction on Demand.</p>
+                        </div>
+                        <div class="px-6 pb-6 pt-2 w-full md:mt-auto hidden md:block">
+                            <a class="tracking-wide uppercase font-bold text-xs inline-flex py-2 text-blue-500 hover:text-gray-900"
+                                href="#">View more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-gray-900 text-gray-100" role="footer">
+        <div class="container mx-auto px-8 py-10">
+            <div class="flex items-center w-full border-b-2 border-gray-800 pb-10 flex-col md:flex-row">
+                <div class="md:flex-1">
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMTc5cHgiIGhlaWdodD0iMzhweCIgdmlld0JveD0iMCAwIDE3OSAzOCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNTcuMSAoODMwODgpIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPnZhbmhhY2stbG9nby1saWdodDwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJBcnRib2FyZCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQ5LjAwMDAwMCwgLTI1Ni4wMDAwMDApIiBmaWxsPSIjRkZGRkZGIj4KICAgICAgICAgICAgPGcgaWQ9InZoLS8tYnJhbmQtLy12YW5oYWNrLWxvZ28tLy1saWdodCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDkuMDAwMDAwLCAyNTYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyBpZD0idmgtLy1icmFuZC0vLXZhbmhhY2stbG9nby0vLXdoaXRlIj4KICAgICAgICAgICAgICAgICAgICA8ZyBpZD0iVmFuSGFjay1sb2dvIiBmaWxsLXJ1bGU9Im5vbnplcm8iPgogICAgICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTYxLjQ1NzEwMSwxNC43NzcyNzgxIEMxNjEuOTA3MjA1LDE0Ljk2MzkwNTMgMTYyLjAxMDczLDE1LjE2ODUyMDcgMTYxLjgxOTQzNSwxNS42MzE3MTYgQzE2MS40ODQxMDcsMTYuNDM2Njg2NCAxNjEuMjAwNTQxLDE3LjI2NDE0MiAxNjAuOTM3MjMsMTguMTA1MDg4OCBDMTYwLjc5NzY5NywxOC41NTQ3OTI5IDE2MC42MDY0MDMsMTguNjM1NzM5NiAxNjAuMTY5ODAxLDE4LjQ2NzEwMDYgQzE1OS4wMzA4NzgsMTguMDU1MjQ2NCAxNTcuODE2ODYzLDE3Ljg5MTkzNzMgMTU2LjYwOTQ3MiwxNy45ODgxNjU3IEMxNTQuNjYwNTE4LDE4LjA4NDg1MjEgMTUzLjQwNDcyNSwxOS4yMzYwOTQ3IDE1My4wOTg2NTQsMjEuMTQ3MzM3MyBDMTUyLjk1MDU2OSwyMi4xMjk1NjcgMTUyLjk1ODkyNSwyMy4xMjkwMTc3IDE1My4xMjM0MSwyNC4xMDg2MzkxIEMxNTMuMzY0MjE2LDI1LjY1NTYyMTMgMTU0LjI4NDY4LDI2LjUxNDU1NjIgMTU1LjkwMjgwNywyNi43ODY2MjcyIEMxNTcuNDQ5NDI2LDI3LjAxMTM4NCAxNTkuMDI0MzI3LDI2Ljk0ODEwODUgMTYwLjU0Nzg4OSwyNi42IEMxNjEuMDI1LDI2LjUwMzMxMzYgMTYxLjE2MjI4MiwyNi42IDE2MS4yMjMwNDYsMjcuMDc0NDM3OSBDMTYxLjM0NDU3NCwyNy45NjI2MDM2IDE2MS41MDY2MTIsMjguODQ0MDIzNyAxNjEuNzAyNDA4LDI5LjcxODY5ODIgQzE2MS43OTQ2NzksMzAuMTI3OTI5IDE2MS43Mzg0MTYsMzAuMjgzMDc2OSAxNjEuMjk3MzEzLDMwLjM5MzI1NDQgQzE1OC42NDc1OTIsMzEuMDQ5MTI1OCAxNTUuODc5NjU3LDMxLjA2NTMxMTcgMTUzLjIyMjQzMywzMC40NDA0NzM0IEMxNTAuMTAwOTU2LDI5LjcxNDIwMTIgMTQ4LjM2MTMwMSwyNy42NTQ1NTYyIDE0OC4wMDM0NjgsMjQuNDI3OTI5IEMxNDcuODI3OTI3LDIyLjg1Mzk2NDUgMTQ3Ljc3ODQxNSwyMS4yOCAxNDguMjI4NTIsMTkuNzE5NTI2NiBDMTQ5LjEyODczLDE2LjQ3MDQxNDIgMTUxLjkzMDYzMiwxNC4yNjQ2MTU0IDE1NS40NzI5NTcsMTQuMDE5NTI2NiBDMTU1Ljk2ODA3MiwxMy45ODU3OTg4IDE1Ni40NjU0MzgsMTQuMDE5NTI2NiAxNTYuOTYwNTUzLDE0LjAxOTUyNjYgTDE1Ni45NTYwNTIsMTQuMDAxNTM4NSBDMTU4LjQ5NTg4NywxMy45MTU0MTE5IDE2MC4wMzUxMzgsMTQuMTgwNjk2MiAxNjEuNDU3MTAxLDE0Ljc3NzI3ODEgWiBNMTY3LjcwNjgwNiw4LjE2MjEzMDE4IEMxNjguMjM3OTMsOC4xNDYzOTA1MyAxNjguMzE0NDQ4LDguMzUxMDA1OTIgMTY4LjMxMjE5Nyw4LjgxNDIwMTE4IEMxNjguMjk0MTkzLDEyLjM2MDExODMgMTY4LjMxMjE5NywxNS45MDYwMzU1IDE2OC4zMTIxOTcsMTkuNDUxOTUyNyBMMTY4LjMxMjE5NywyMC4zNTEzNjA5IEMxNjkuMDUyNjE5LDE5LjM2ODc1NzQgMTY5LjY2MjUxMiwxOC41NTI1NDQ0IDE3MC4yODU5MDcsMTcuNzMxODM0MyBDMTcxLjAyMjU3OCwxNi43NDg0ODEzIDE3MS43NTg1LDE1Ljc2MzYyOTIgMTcyLjQ5MzY3MSwxNC43NzcyNzgxIEMxNzIuNjMzMjAzLDE0LjU5MDY1MDkgMTcyLjc1MDIzMSwxNC4zODM3ODcgMTczLjA0MDU0OCwxNC4zODYwMzU1IEwxNzguMTM1NzM1LDE0LjM4NjAzNTUgTDE3NS4wNjE1MTksMTguMjUxMjQyNiBDMTc0LjIzNTU3NywxOS4yODU1NjIxIDE3My40MTg2MzYsMjAuMzI4ODc1NyAxNzIuNTg1OTQyLDIxLjM0OTcwNDEgQzE3Mi4zMjI2MzEsMjEuNjcxMjQyNiAxNzIuMjU1MTE1LDIxLjg5Mzg0NjIgMTcyLjU4NTk0MiwyMi4yNDkxMTI0IEMxNzMuNDYxMzk2LDIzLjE3Nzc1MTUgMTc0LjI4OTU4OSwyNC4xNTEzNjA5IDE3NS4xNDI1MzgsMjUuMTAwMjM2NyBDMTc2LjEwNTc2MiwyNi4xNzI3ODExIDE3Ny4zNTcwNTMsMjYuNzY0MTQyIDE3OC42OTYxMTUsMjcuMjA0ODUyMSBMMTc4LjY5NjExNSwyNy45MTMxMzYxIEwxNzguNjgwMzYyLDI3LjkwNDE0MiBDMTc4LjM1MTc4NSwyOC42MjE0MjAxIDE3OC4zNDk1MzUsMjkuNDAzOTA1MyAxNzguMjUwNTEyLDMwLjE1MjY2MjcgQzE3OC4xODA3NDUsMzAuNjgxMDY1MSAxNzguMDI1NDU5LDMwLjkwMzY2ODYgMTc3LjQyNDU2OSwzMC44Njk5NDA4IEMxNzQuNzIzOTQsMzAuNzIxNTM4NSAxNzIuNTQ5OTM0LDI5LjY5ODQ2MTUgMTcwLjk3NjgxOCwyNy40NDU0NDM4IEMxNzAuMTgyMzgzLDI2LjMwNzY5MjMgMTY5LjI4ODkyNSwyNS4yMzk2NDUgMTY4LjMxMjE5NywyMy45NzE0NzkzIEwxNjguMzEyMTk3LDI0Ljg5MzM3MjggQzE2OC4zMTIxOTcsMjYuNTczMDE3OCAxNjguMjk2NDQzLDI4LjI1MDQxNDIgMTY4LjMxMjE5NywyOS45MzAwNTkyIEMxNjguMzEyMTk3LDMwLjM3OTc2MzMgMTY4LjE5NTE3LDMwLjU1NzM5NjQgMTY3LjcyMjU2LDMwLjU0NjE1MzggQzE2Ni40NDY1MTMsMzAuNTIxNDIwMSAxNjUuMTY1OTY0LDMwLjUyMzY2ODYgMTYzLjg5NjY2OSwzMC41NDYxNTM4IEMxNjMuNDgwMzIyLDMwLjU0NjE1MzggMTYzLjMyMDUzNSwzMC40NDcyMTg5IDE2My4zMjA1MzUsMjkuOTk1MjY2MyBDMTYzLjMzMjUzNywyMi45MDM0MzIgMTYzLjMzMjUzNywxNS44MTA4NDgxIDE2My4zMjA1MzUsOC43MTc1MTQ3OSBDMTYzLjMyMDUzNSw4LjI2NzgxMDY1IDE2My40NDY1NjQsOC4xNTMxMzYwOSAxNjMuODgwOTE1LDguMTYyMTMwMTggQzE2NS4xNTY5NjIsOC4xODkxMTI0MyAxNjYuNDM3NTEsOC4xOTgxMDY1MSAxNjcuNzA2ODA2LDguMTYyMTMwMTggWiBNODUuOTY3NzcwNCwxNC4zNjEzMDE4IEM4OC4yMTgyOTQ1LDE0LjkwMDk0NjcgODkuMjgwNTQxOSwxNi4zMjg3NTc0IDg5LjM0MzU1NjYsMTguNjYwNDczNCBDODkuMzYzMDYxMSwxOS40NjM5NDQ4IDg5LjM1NjU1OTYsMjAuMjY3NDE2MiA4OS4zNTAwNTgxLDIxLjA3MTU1MzggTDg5LjM0MzU1NjYsMjIuMjc4MzQzMiBMODkuMzQ1ODA3MSwyMi4yODk1ODU4IEM4OS4zNDU4MDcxLDIzLjQ0NzU3NCA4OS4zODYzMTY2LDI0LjYwNzgxMDcgODkuMzMwMDUzNSwyNS43NjU3OTg4IEM4OS4yOTYyOTU2LDI2LjQ4NzU3NCA4OS41Njg2MDksMjYuODYwODI4NCA5MC4yNjE3NzA0LDI2Ljg3NjU2OCBDOTAuNzExODc1MywyNi44NzY1NjggOTAuODA2Mzk3MywyNy4wNzIxODkzIDkwLjc3NzE0MDUsMjcuNDc5MTcxNiBDOTAuNzA5NjI0NywyOC4zOTY1NjggOTAuNjczNjE2NCwyOS4zMTg0NjE1IDkwLjYzNzYwOCwzMC4yNDAzNTUgQzkwLjYzNzYwOCwzMC40ODA5NDY3IDkwLjU4NTg0NTksMzAuNjUxODM0MyA5MC4yOTU1MjgzLDMwLjY2MDgyODQgQzg4Ljc3ODY3NTEsMzAuNzEwMjk1OSA4Ny4yNjE4MjE4LDMwLjczMDUzMjUgODUuODYxOTk1OCwzMC4wMDg3NTc0IEM4NS42MjAwODEyLDI5LjkwOTI3ODYgODUuNDEzODA4MiwyOS43MzkyMzUzIDg1LjI3MDEwOCwyOS41MjA4Mjg0IEM4NC45ODIwNDA5LDI4LjkwNDczMzcgODQuNjkzOTczOCwyOS4xNDc1NzQgODQuMzA5MTM0MiwyOS40MTI4OTk0IEM4Mi40Mzc4ODUyLDMwLjc3MjYxMTggODAuMDMxNjU2OCwzMS4xNjM5NzQ3IDc3LjgyNTM3NDIsMzAuNDY3NDU1NiBDNzUuODgzMTcxOSwyOS44OTYzMzE0IDc0LjgxMTkyMjQsMjguNSA3NC42OTAzOTQxLDI2LjQ2OTU4NTggQzc0LjU0ODYxMTEsMjQuMTAxODkzNSA3NS4zNjU1NTE0LDIyLjU5NzYzMzEgNzcuMjg3NDk5LDIxLjc0NzY5MjMgQzc4LjU0MzI5MTQsMjEuMTc2NTY4IDc5Ljg5MzYwNTksMjEuMDI1OTE3MiA4MS4yNDM5MjAzLDIwLjk3ODY5ODIgQzgyLjE2NjYzNTIsMjAuOTQ0OTcwNCA4My4wODkzNTAxLDIwLjk1Mzk2NDUgODQuMDEyMDY1LDIwLjk3ODY5ODIgQzg0LjM4MTE1MDksMjAuOTc4Njk4MiA4NC40OTE0MjY2LDIwLjg1OTUyNjYgODQuNTA3MTgwMywyMC40OTA3NjkyIEM4NC41NTg5NDIzLDE4Ljk5Nzc1MTUgODQuMDk3NTg0OSwxOC40Mzc4Njk4IDgyLjU5NDIzNDgsMTguMjEzMDE3OCBDODAuNzc1ODExMywxNy45NTg5MzQ5IDc5LjAxMzY1MDksMTguMzQ3OTI5IDc3LjI2MDQ5MjcsMTguNzI3OTI5IEM3Ni43NzY2MywxOC44MzM2MDk1IDc2LjU4NTMzNTQsMTguNzcyODk5NCA3Ni40Nzk1NjA4LDE4LjI3ODIyNDkgQzc2LjI3OTI2NDIsMTcuNDA1Nzk4OCA3Ni4wMjk0NTYsMTYuNTQ0NjE1NCA3NS43NzA2NDU3LDE1LjY4MzQzMiBDNzUuNjc2MTIzNywxNS4zNjYzOTA1IDc1Ljc0ODE0MDUsMTUuMjE1NzM5NiA3Ni4wNjU0NjQ0LDE1LjEwMTA2NTEgQzc5LjI5NDk2NjUsMTMuOTE4MzQzMiA4Mi41OTE5ODQzLDEzLjU2MDgyODQgODUuOTY3NzcwNCwxNC4zNjEzMDE4IFogTTE0MS42OTI5OTgsMTQuMjczNjA5NSBDMTQ0LjA4NzU1NiwxNC43NTAyOTU5IDE0NS4yNjY4MywxNi4xODI2MDM2IDE0NS4zMjc1OTQsMTguNjMxMjQyNiBDMTQ1LjM1Njg1MSwxOS43ODkyMzA4IDE0NS4zMjc1OTQsMjAuOTQ3MjE4OSAxNDUuMzI3NTk0LDIyLjEwNTIwNzEgTDE0NS4zNDEwOTcsMjIuMTA1MjA3MSBMMTQ1LjM0MTA5NywyMi4xMTg2OTgyIEMxNDUuMzQxMDk3LDIzLjMyMzkwNTMgMTQ1LjM3OTM1NiwyNC41MzEzNjA5IDE0NS4zMjc1OTQsMjUuNzMyMDcxIEMxNDUuMjkzODM2LDI2LjQ4NTMyNTQgMTQ1LjU5MzE1NiwyNi44NTYzMzE0IDE0Ni4zMTU1NzQsMjYuODc4ODE2NiBDMTQ2Ljc4MzY4MywyNi44Nzg4MTY2IDE0Ni44MzA5NDQsMjcuMDY3NjkyMyAxNDYuNzk0OTM2LDI3LjQ4ODE2NTcgQzE0Ni43MTYxNjgsMjguMzU2MDk0NyAxNDYuNzA3MTY2LDI5LjIzMzAxNzggMTQ2LjY4NDY2LDMwLjEwNzY5MjMgQzE0Ni42ODQ2NiwzMC40NzQyMDEyIDE0Ni41NDI4NzcsMzAuNjcyMDcxIDE0Ni4xNDQ1MzUsMzAuNjgxMDY1MSBDMTQ0Ljg4ODc0MiwzMC43MDU3OTg4IDE0My42Mzk3MDEsMzAuNjgxMDY1MSAxNDIuNDMzNDIsMzAuMjcxODM0MyBDMTQxLjk1NjMwOSwzMC4xMTQ0Mzc5IDE0MS40NzI0NDcsMjkuODg1MDg4OCAxNDEuMjM2MTQyLDI5LjQzNTM4NDYgQzE0MC45NjgzMjksMjguOTI0OTcwNCAxNDAuNzM2NTI1LDI5LjEyNzMzNzMgMTQwLjQzMjcwNCwyOS4zNDMxOTUzIEMxMzguNDM2NDksMzAuNzUwNzY5MiAxMzYuMjU1NzMyLDMxLjE1Nzc1MTUgMTMzLjkwNjE4NCwzMC40Njc0NTU2IEMxMzEuOTI3OTc0LDI5Ljg5NDA4MjggMTMwLjgyNTIxNywyOC40OTU1MDMgMTMwLjY5MjQzNiwyNi40NTE1OTc2IEMxMzAuNTMwMzk4LDI0LjEyODg3NTcgMTMxLjQzMDYwOCwyMi41NTI2NjI3IDEzMy4zNzUwNjEsMjEuNzA5NDY3NSBDMTM0Ljc0NTYzLDIxLjExODEwNjUgMTM2LjIwMzk3LDIwLjk5NjY4NjQgMTM3LjY3NTgxMiwyMC45NzE5NTI3IEMxMzguNDMxOTg4LDIwLjk1ODQ2MTUgMTM5LjE5MDQxNSwyMC45NDI3MjE5IDEzOS45NDY1OTEsMjAuOTcxOTUyNyBDMTQwLjM5NjY5NiwyMC45OTQ0Mzc5IDE0MC40OTEyMTgsMjAuODIzNTUwMyAxNDAuNDk1NzE5LDIwLjQwNTMyNTQgQzE0MC40OTU3MTksMTguODkyMDcxIDE0MC4xMzc4ODYsMTguNDI4ODc1NyAxMzguNjE2NTMxLDE4LjIxMzAxNzggQzEzNi44MDI2MDksMTcuOTU0NDM3OSAxMzUuMDQwNDQ5LDE4LjM1MDE3NzUgMTMzLjI4NzI5LDE4LjcyNTY4MDUgQzEzMi44MTQ2OCwxOC44MjY4NjM5IDEzMi42MTIxMzMsMTguNzg0MTQyIDEzMi41MDQxMDgsMTguMjc1OTc2MyBDMTMyLjMxNzMxNCwxNy40MjYwMzU1IDEzMi4wNTQwMDMsMTYuNTg5NTg1OCAxMzEuODE1NDQ4LDE1Ljc1MDg4NzYgQzEzMS43MTQxNzQsMTUuNDA2ODYzOSAxMzEuNzM0NDI5LDE1LjIyNjk4MjIgMTMyLjE0MTc3NCwxNS4wNzYzMzE0IEMxMzUuMTg4MzgzLDEzLjkyNDQ3OTQgMTM4LjQ5NjYwNiwxMy42NDY0NDM0IDE0MS42OTI5OTgsMTQuMjczNjA5NSBaIE01Ny42NDI2NzQsOS41NzY0NDk3IEM1OC4xMTA3ODMsOS41NzY0NDk3IDU4LjI5MzA3NTUsOS43MjkzNDkxMSA1OC40MjEzNTUzLDEwLjE1ODgxNjYgQzU5Ljk3NTcxNzMsMTUuMzMzNDEyMiA2MS41NDEzMzE5LDIwLjUwNTAwOTkgNjMuMTE4MTk5MiwyNS42NzM2MDk1IEM2My4yMDU5Njk2LDI1Ljk2NTkxNzIgNjMuMzA0OTkyNywyNi4yNTM3Mjc4IDYzLjQ1MzUyNzMsMjYuNzA3OTI5IEM2My45MzUxMzk0LDI1LjM5NDc5MjkgNjQuMzY3MjQsMjQuMjM0NTU2MiA2NC43OTAzMzg2LDIzLjA1NDA4MjggQzY2LjMyNjY5NjQsMTguNzkyMzg2NiA2Ny44NTc4MDI5LDE0LjUyODQ0MTggNjkuMzgzNjU4MywxMC4yNjIyNDg1IEM2OS41NTkxOTkyLDkuNzcyMDcxMDEgNjkuNzc1MjQ5NSw5LjU1NjIxMzAyIDcwLjMzMTEyODksOS41ODc2OTIzMSBDNzEuNTgyNDIwMyw5LjYzNDkxMTI0IDcyLjgzODIxMjgsOS42MjgxNjU2OCA3NC4wOTE3NTQ3LDkuNTg3NjkyMzEgQzc0LjY5NzE0NTcsOS41Njk3MDQxNCA3NC43OTYxNjg4LDkuNjk3ODY5ODIgNzQuNTY2NjE1MywxMC4yNzU3Mzk2IEM3Mi43MzY5MzkyLDE0Ljg4MDcxMDEgNzAuOTM4NzcwNCwxOS40OTQ2NzQ2IDY5LjEzMTU5OTYsMjQuMTEzMTM2MSBDNjguMzgyMTc1MSwyNi4wMjQzNzg3IDY3LjYyMzc0ODQsMjcuOTM1NjIxMyA2Ni44OTkwNzk3LDI5Ljg1MzYwOTUgQzY2LjcxMDAzNTYsMzAuMzU3Mjc4MSA2Ni40NzgyMzE3LDMwLjU5MzM3MjggNjUuODg2MzQzOCwzMC41NzUzODQ2IEM2NC4xODQ5NDc2LDMwLjUyODE2NTcgNjIuNDc5MDUwMywzMC41MzQ5MTEyIDYwLjc3NzY1NDEsMzAuNTc1Mzg0NiBDNjAuMjI2Mjc1NywzMC41ODY2MjcyIDYwLjAwNzk3NDgsMzAuMzkzMjU0NCA1OS44MzY5MzUsMjkuODg3MzM3MyBDNTcuNjE5NDE4NiwyMy4zNjUxMjgyIDU1LjM4NzY0ODgsMTYuODQ0NDE4MSA1My4xNDE2MjU4LDEwLjMyNTIwNzEgQzUzLjA3NDExMDEsMTAuMTI3MzM3MyA1Mi45NzI4MzY1LDkuOTQwNzEwMDYgNTIuODg3MzE2Niw5Ljc0OTU4NTggTDUyLjg4NzMxNjYsOS42MDc5Mjg5OSBDNTQuNDYyNjgzNCw5LjYwMzQzMTk1IDU2LjA1ODMwNSw5LjYwMzQzMTk1IDU3LjY0MjY3NCw5LjU3NjQ0OTcgWiBNMTA0LjI0MjAyNiwxNC4wODI0ODUyIEMxMDYuNTM3NTYxLDE0LjUxODY5ODIgMTA3LjU5MzA1NywxNS43Njg4NzU3IDEwNy44MTgxMDksMTguMTAwNTkxNyBDMTA3Ljk5NTksMTkuOTM5ODgxNyAxMDcuOTE0ODgyLDIxLjc4MzY2ODYgMTA3LjkzMDYzNSwyMy42MjUyMDcxIEMxMDcuOTQ2Mzg5LDI1LjcwMjg0MDIgMTA3LjkxNzEzMiwyNy43ODQ5NzA0IDEwNy45NDYzODksMjkuODYyNjAzNiBDMTA3Ljk0NjM4OSwzMC4zNzMwMTc4IDEwNy44MzgzNjQsMzAuNTc3NjMzMSAxMDcuMjg0NzM1LDMwLjU1OTY0NSBDMTA2LjA1NTk0OSwzMC41MjE0MjAxIDEwNC44MjQ5MTIsMzAuNTI1OTE3MiAxMDMuNTk2MTI2LDMwLjU1OTY0NSBDMTAzLjEwMzI2MSwzMC41NzMxMzYxIDEwMi45NTQ3MjYsMzAuNDI2OTgyMiAxMDIuOTU2OTc3LDI5LjkyNzgxMDcgQzEwMi45Nzk0ODIsMjYuOTUwNzY5MiAxMDIuOTU2OTc3LDIzLjk3MzcyNzggMTAyLjk2ODIzLDIwLjk5NjY4NjQgQzEwMi45ODA5NTUsMjAuNTAwNzgzMiAxMDIuOTQxNzMzLDIwLjAwNDkxMDEgMTAyLjg1MTIwMiwxOS41MTcxNTk4IEMxMDIuNjcxMTYsMTguNjY3MjE4OSAxMDIuMjc5NTY5LDE4LjMxNDIwMTIgMTAxLjM5NzM2NCwxOC4yNDg5OTQxIEMxMDAuMTkxMjc5LDE4LjE2OTg1MyA5OC45ODIwMjgyLDE4LjM0NTI5NDkgOTcuODQ4Mjg3MiwxOC43NjM5MDUzIEM5Ny4zMzUxNjc3LDE4Ljk0Mzc4NyA5Ny4xMjU4NjksMTkuMTc5ODgxNyA5Ny4xMzI2MjA1LDE5Ljc2ODk5NDEgQzk3LjE2ODYyODksMjMuMTIzNzg3IDk3LjEzMjYyMDUsMjYuNDc4NTc5OSA5Ny4xNjE4Nzc0LDI5LjgzNTYyMTMgQzk3LjE2MTg3NzQsMzAuMzc1MjY2MyA5Ny4wNDI1OTk2LDMwLjU4MjEzMDIgOTYuNDY0MjE0OSwzMC41NjQxNDIgQzk1LjIzNTQyODcsMzAuNTIzNjY4NiA5NC4wMDQzOTIsMzAuNTM3MTU5OCA5Mi43NzU2MDU5LDMwLjU2NDE0MiBDOTIuMzQxMjU0NywzMC41NjQxNDIgOTIuMTU2NzExNywzMC40ODMxOTUzIDkyLjE1NjcxMTcsMjkuOTgxNzc1MSBDOTIuMTc2MjE2MywyNC45NDk1ODU4IDkyLjE3NjIxNjMsMTkuOTE2NjQ2OSA5Mi4xNTY3MTE3LDE0Ljg4Mjk1ODYgQzkyLjE1NjcxMTcsMTQuNDMzMjU0NCA5Mi4zMDUyNDYzLDE0LjMyMDgyODQgOTIuNzI4MzQ0OSwxNC4zMjc1NzQgQzkzLjk1NzEzMSwxNC4zNTAwNTkyIDk1LjE4ODE2NzcsMTQuMzY4MDQ3MyA5Ni40MTY5NTM5LDE0LjMyNzU3NCBDOTcuMDEzMzQyOCwxNC4zMDUwODg4IDk3LjIyNzE0MjYsMTQuNDg0OTcwNCA5Ny4xNTczNzYzLDE1LjA3NDA4MjggQzk3LjA5NTE0OTQsMTUuMzM3NjUxNSA5Ny4xMjIwNTY2LDE1LjYxNDM5MDUgOTcuMjMzODk0MSwxNS44NjEwNjUxIEw5Ny4yNDczOTczLDE1Ljg0NzU3NCBDOTcuNzg1MjcyNSwxNS41MzcyNzgxIDk4LjMwMjg5MzEsMTUuMjI0NzMzNyA5OC44MjI3NjQyLDE0LjkzNDY3NDYgQzEwMC40NjkwMTYsMTQuMDEyMTM1OSAxMDIuMzkxNzMzLDEzLjcwOTc4NSAxMDQuMjQyMDI2LDE0LjA4MjQ4NTIgWiBNMTI4LjE1Mzg0NSw5LjU2MDcxMDA2IEMxMjguNTQwOTM1LDkuNTYwNzEwMDYgMTI4LjY4NzIxOSw5LjY1MDY1MDg5IDEyOC42ODcyMTksMTAuMDY4ODc1NyBDMTI4LjY3NTIxNiwxNi43MTEwMDU5IDEyOC42NzUyMTYsMjMuMzUzODg1NiAxMjguNjg3MjE5LDI5Ljk5NzUxNDggQzEyOC42ODcyMTksMzAuNDY3NDU1NiAxMjguNTAyNjc2LDMwLjUzOTQwODMgMTI4LjEwMjA4MywzMC41MzQ5MTEyIEMxMjYuODAxMjgsMzAuNTE2OTIzMSAxMjUuNTAwNDc3LDMwLjUwNzkyOSAxMjQuMTk3NDIzLDMwLjUzNDkxMTIgQzEyMy42Nzc1NTIsMzAuNTQ4NDAyNCAxMjMuNTcxNzc4LDMwLjM0Mzc4NyAxMjMuNTc2Mjc5LDI5Ljg2MDM1NSBDMTIzLjU5NjUzNCwyNy40MjUyMDcxIDEyMy41NzYyNzksMjQuOTkwMDU5MiAxMjMuNTk2NTM0LDIyLjU1NDkxMTIgQzEyMy41OTY1MzQsMjIuMDMzMjU0NCAxMjMuNDcyNzU1LDIxLjg4MDM1NSAxMjIuOTIxMzc2LDIxLjg4MDM1NSBDMTIwLjM3MDc4MiwyMS45MTAzMzUzIDExNy44MTU2ODcsMjEuOTEwMzM1MyAxMTUuMjU2MDkxLDIxLjg4MDM1NSBDMTE0Ljc1MTk3NCwyMS44ODAzNTUgMTE0LjYyMTQ0MywyMi4wMzU1MDMgMTE0LjYyNTk0NCwyMi41MjM0MzIgQzExNC42NDg0NSwyNC45MzYwOTQ3IDExNC42MTAxOTEsMjcuMzQ2NTA4OSAxMTQuNjUyOTUxLDI5Ljc1NjkyMzEgQzExNC42NjQyMDMsMzAuNDA4OTk0MSAxMTQuNDU3MTU1LDMwLjU1MDY1MDkgMTEzLjg1MTc2NCwzMC41MjU5MTcyIEMxMTIuNjcwMjM5LDMwLjQ3ODY5ODIgMTExLjQ4NDIxMywzMC40NzE5NTI3IDExMC4zMDI2ODgsMzAuNTI1OTE3MiBDMTA5LjYyNzUzLDMwLjU1OTY0NSAxMDkuNTMwNzU4LDMwLjMwMTA2NTEgMTA5LjUzNzUwOSwyOS43MDk3MDQxIEMxMDkuNTYyMjY1LDI2LjQ2OTU4NTggMTA5LjU0ODc2MiwyMy4yMzE3MTYgMTA5LjU0ODc2MiwxOS45OTM4NDYyIEwxMDkuNTczNTE4LDIwLjAyOTgyMjUgQzEwOS41NzM1MTgsMTYuNzY3MjE4OSAxMDkuNTg3MDIxLDEzLjUwOTExMjQgMTA5LjU2MjI2NSwxMC4yNDIwMTE4IEMxMDkuNTYyMjY1LDkuNzA0NjE1MzggMTA5LjcxMzA1LDkuNTY3NDU1NjIgMTEwLjIzNzQyMiw5LjU2NzQ1NTYyIEMxMTEuNTEzNDcsOS42MDU2ODA0NyAxMTIuNzkxNzY3LDkuNTk4OTM0OTEgMTE0LjA2MzMxMyw5LjU2NzQ1NTYyIEMxMTQuNTMxNDIyLDkuNTY3NDU1NjIgMTE0LjY2NDIwMyw5LjcwMjM2Njg2IDExNC42NTk3MDIsMTAuMTY1NTYyMSBDMTE0LjYzOTQ0OCwxMi41NTM0OTExIDExNC42NzU0NTYsMTQuOTQxNDIwMSAxMTQuNjMyNjk2LDE3LjMyOTM0OTEgQzExNC42MjE0NDMsMTcuOTc5MTcxNiAxMTQuODI2MjQxLDE4LjEwNzMzNzMgMTE1LjQzMTYzMiwxOC4wOTgzNDMyIEMxMTcuOTA3MjA5LDE4LjA2NDYxNTQgMTIwLjQwMDc4OSwxOC4wNjkxMTI0IDEyMi44ODUzNjgsMTguMDk4MzQzMiBDMTIzLjQzMjI0NSwxOC4wOTgzNDMyIDEyMy42MTIyODcsMTcuOTcyNDI2IDEyMy42MDMyODUsMTcuMzk5MDUzMyBDMTIzLjU2OTUyNywxNS4wMTExMjQzIDEyMy42MDMyODUsMTIuNjIzMTk1MyAxMjMuNTc2Mjc5LDEwLjIzNTI2NjMgQzEyMy41NzYyNzksOS42OTc4Njk4MiAxMjMuNzIyNTYzLDkuNTYwNzEwMDYgMTI0LjI1MTQzNiw5LjU2MDcxMDA2IEMxMjUuNTUyMjM5LDkuNTk4OTM0OTEgMTI2Ljg1MzA0Miw5LjU4NTQ0Mzc5IDEyOC4xNTM4NDUsOS41NjA3MTAwNiBaIE04NC4xODMxMDQ4LDIzLjkwODUyMDcgQzgyLjk5MDMyNywyMy45ODA0NzM0IDgxLjc3MDU0MywyMy43NjkxMTI0IDgwLjYwNDc3MTUsMjQuMTc4MzQzMiBDNzkuODAzNTg0OSwyNC40NTk0MDgzIDc5LjQ0MTI1MDUsMjUuMDI2MDM1NSA3OS41MzEyNzE1LDI1Ljc5MDUzMjUgQzc5LjYwMzI4ODMsMjYuNDE1NjIxMyA4MC4xMzY2NjI1LDI2Ljg1NDA4MjggODAuOTQ0NjAwNiwyNi45MzUwMjk2IEM4MS43MjI4OTAzLDI2Ljk4NjQ2MTUgODIuNTA0MzYyMywyNi45MTA1MTA1IDgzLjI1ODEzOTQsMjYuNzEwMTc3NSBDODQuNDkxNDI2NiwyNi40MjQ2MTU0IDg0LjQ5MTQyNjYsMjYuNDI2ODYzOSA4NC40ODkxNzYxLDI1LjE5NDY3NDYgTDg0LjQ4OTE3NjEsMjQuMjg0MDIzNyBDODQuNDg5MTc2MSwyNC4wNzI2NjI3IDg0LjQzNzQxNCwyMy44OTI3ODExIDg0LjE4MzEwNDgsMjMuOTA4NTIwNyBaIE0xMzYuNzE0ODM5LDI0LjEyNDM3ODcgTDEzNi43MTI1ODgsMjQuMTI0Mzc4NyBDMTM1Ljg4MjE0NSwyNC4zOTg2OTgyIDEzNS40MzQyOSwyNS4wMTAyOTU5IDEzNS41MTk4MSwyNS43NDU1NjIxIEMxMzUuNTk4NTc5LDI2LjQyMDExODMgMTM2LjE3OTIxNCwyNi44Njk4MjI1IDEzNy4wNTY5MTgsMjYuOTM1MDI5NiBDMTM3LjkzNDYyMywyNy4wMDAyMzY3IDEzOC43ODc1NzEsMjYuNzk1NjIxMyAxMzkuNjQ3MjcxLDI2LjYzODIyNDkgQzE0MC4yNzUxNjgsMjYuNTIzNTUwMyAxNDAuNTM2MjI5LDI2LjI5NDIwMTIgMTQwLjUwNjk3MiwyNS41ODgxNjU3IEMxNDAuNDM5NDU2LDIzLjg5NTAyOTYgMTQwLjQ4NjcxNywyMy44OTUwMjk2IDEzOC41MTUyNTgsMjMuOTI0MjYwNCBDMTM3LjkwODI1OCwyMy44OTM5OTc4IDEzNy4zMDAzNCwyMy45NjE1Njg0IDEzNi43MTQ4MzksMjQuMTI0Mzc4NyBaIiBpZD0iVmFuSGFjayI+PC9wYXRoPgogICAgICAgICAgICAgICAgICAgICAgICA8ZyBpZD0iaWNvbiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDAuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMy42ODYzNTg0OSw5LjQyNTc5ODgyIEw5LjkyNDgxMTMyLDIxLjYzNTI2NjMgQzEwLjE0OTg2MzcsMjAuODY0MDIzNyAxMC4zNDc5MDk5LDIwLjI1MjQyNiAxMC41Mjc5NTE4LDE5LjYzNjMzMTQgQzEyLjM5ODg4NzUsMTMuMjkxMDA1OSAxNC4yNjQ1NzIsNi45NDc5Mjg5OSAxNi4xMjUwMDUyLDAuNjA3MTAwNTkyIEMxNi4yNjY3ODgzLDAuMTE5MTcxNTk4IDE2LjQ2OTMzNTQsMCAxNi45NTU0NDg2LDAgQzE5LjY1NjA3NzYsMC4wMjQ3MzM3Mjc4IDIyLjM3MDIwOTYsMC4wMTEyNDI2MDM2IDI1LjA3NzU5MDEsMC4wMTEyNDI2MDM2IEwyNS43MTY3MzksMC4wMTEyNDI2MDM2IEMyNS4yMzI4NzYzLDEuNjU5NDA4MjggMjQuNzY5MjY4MywzLjI0Njg2MzkxIDI0LjMwMTE1OTMsNC44MzIwNzEwMSBDMjEuMTIzNDE5MywxNS41OTk0ODcyIDE3Ljk1MDE4MDMsMjYuMzY3NjUyOSAxNC43ODE0NDIzLDM3LjEzNjU2OCBDMTQuNjEyNjUzLDM3LjcxNDQzNzkgMTQuMzg3NjAwNiwzNy44ODk4MjI1IDEzLjc4ODk2MTIsMzcuODc4NTc5OSBDMTEuNTA5MTgwMywzNy44MzgxMDY1IDkuMjI3MTQ4ODUsMzcuODUxNTk3NiA2Ljk0NTExNzQsMzcuODc4NTc5OSBDNi42MDY1NTQ0NywzNy45MjIzMTIgNi4yODU1Njg1NSwzNy43MTY0MTg3IDYuMTg0NDQwMjUsMzcuMzkwNjUwOSBDNC4yNDc0ODkxNywzMy4wNiAyLjI5NzAzNDk0LDI4LjczNDU5NTcgMC4zMzMwNzc1NjgsMjQuNDE0NDM3OSBDMC4yMTY0OTMzODcsMjQuMTkwMjI3MSAwLjE4NTMwNjI1LDIzLjkzMTM2NDYgMC4yNDUzMDcxMjgsMjMuNjg1OTE3MiBDMS4zOTUzMjQ5NSwxOC45ODg3NTc0IDIuNTE4MzM2NDgsMTQuMjk2MDk0NyAzLjY4NjM1ODQ5LDkuNDI1Nzk4ODIiIGlkPSJwYXRoMTgiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik00Ni41OTkzNTIyLDAuMDc0MjAxMTgzNCBDNDYuMTcxNzUyNiwxLjUzNzk4ODE3IDQ1Ljc1MDkwNDYsMi45OTcyNzgxMSA0NS4zMTg4MDQsNC40NjU1NjIxMyBDNDIuMDkxNTUyNCwxNS4zOTE4NzM4IDM4Ljg2NTgwMTIsMjYuMzE4OTM0OSAzNS42NDE1NTAzLDM3LjI0Njc0NTYgQzM1LjUwNDI2ODMsMzcuNzE2Njg2NCAzNS4zMTk3MjU0LDM3Ljg3NDA4MjggMzQuODIwMTA5LDM3Ljg2OTU4NTggQzMyLjAyNzIwODYsMzcuODQyNjAzNiAyOS4yMzQzMDgyLDM3Ljg1NjA5NDcgMjYuNDQxNDA3OCwzNy44NTYwOTQ3IEMyNi4zMzc4ODM2LDM3Ljg1NjA5NDcgMjYuMjMyMTA5LDM3Ljg0MDM1NSAyNi4wNTY1NjgxLDM3LjgyOTExMjQgQzI2LjQ2NjE2MzUsMzYuNDM1MDI5NiAyNi44NjY3NTY4LDM1LjA3NDY3NDYgMjcuMjY3MzUwMSwzMy43MTQzMTk1IEMyOC4xNzg4MTI0LDMwLjYxNTg1OCAyOS4wODEyNzI1LDI3LjUxMjg5OTQgMzAuMDE1MjQsMjQuNDIxMTgzNCBDMzAuMTc1MDI3MywyMy44OTUwMjk2IDMwLjA4Mjc1NTgsMjMuNzYyMzY2OSAyOS41MzU4Nzg0LDIzLjc2Njg2MzkgQzI3LjEyNzgxNzYsMjMuNzg5MzQ5MSAyNC43MTc1MDYzLDIzLjc2Njg2MzkgMjIuMzA5NDQ1NSwyMy43NjY4NjM5IEMyMS40NjU0OTksMjMuNzY2ODYzOSAyMS40NTg3NDc0LDIzLjc2Njg2MzkgMjEuNjgxNTQ5MywyMi45MjU5MTcyIEMyMi4zNTY3MDY1LDIwLjQwMDgyODQgMjMuMDQzMTE2NCwxNy44Nzc5ODgyIDIzLjcwNzAyMSwxNS4zNDg0MDI0IEMyMy44MjQwNDgyLDE0Ljg5ODY5ODIgMjQuMDE3NTkzMywxNC43MzIzMDc3IDI0LjQ4Nzk1MjgsMTQuNzM5MDUzMyBDMjcuMDQ0NTQ4MiwxNC43Nzk1MjY2IDI5LjYwMTE0MzYsMTQuNzcyNzgxMSAzMi4xNTc3MzksMTQuODI2NzQ1NiBDMzIuNzE4MTE5NSwxNC44Mzc5ODgyIDMyLjkyMDY2NjcsMTQuNjM1NjIxMyAzMy4wNTc5NDg2LDE0LjEyNzQ1NTYgQzM0LjM3Njc1NTgsOS41NzQyMDExOCAzNS43MjI1NjkyLDUuMDI5OTQwODMgMzcuMDU5MzgwNSwwLjQ4MzQzMTk1MyBDMzcuMTQwMzk5NCwwLjIwOTExMjQyNiAzNy4yMTI0MTYxLC0wLjAwMjI0ODUyMDcxIDM3LjU5NzI1NTgsNy42ODg3OTI1ZS0xNSBDNDAuNTQ1NDQyMywwLjAyMjQ4NTIwNzEgNDMuNDg2ODc3NCwwLjAxNzk4ODE2NTcgNDYuNDI4MzEyNCwwLjAyMjQ4NTIwNzEgQzQ2LjQ4NzAwOTEsMC4wMzM1Nzc3MTA4IDQ2LjU0NDM0ODksMC4wNTA5MTUxMTA0IDQ2LjU5OTM1MjIsMC4wNzQyMDExODM0IiBpZD0icGF0aDIwIj48L3BhdGg+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg=="
+                        alt="VanHack">
+                </div>
+                <div class="mt-10 md:mt-0 md:flex md:items-center md:justify-end">
+                    <a class="block w-full text-center py-3 px-5 underline text-gray-100 border-2 border-gray-800 rounded-md hover:bg-white hover:no-underline hover:text-gray-900 hover:border-gray-900 md:w-auto md:ml-4"
+                        href="https://vanhack.com/platform/#/jobs">Get your new job</a>
+                    <a class="block w-full text-center py-3 px-5 underline text-gray-100 border-2 border-gray-800 rounded-md mt-6 hover:bg-white hover:no-underline hover:text-gray-900 hover:border-gray-900 md:mt-0 md:w-auto md:ml-4"
+                        href="https://vanhack.com/platform/#/jobs">Join VanHack Premium</a>
+                </div>
+            </div>
+            <div class="w-full border-b-2 border-gray-800 py-10">
+                <ul class="flex flex-col items-center text-lg md:flex-row md:justify-center">
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/platform/#/talent">Talent Pool</a>
+                    </li>
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/platform/#/talent">Jobs</a>
+                    </li>
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/covid-19">Leap</a>
+                    </li>
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/platform/#/events">Events</a>
+                    </li>
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/premium">Premium</a>
+                    </li>
+                    <li class="mx-2">
+                        <a class="block py-4 md:py-0 hover:text-blue-500" href="https://vanhack.com/about">About</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full flex flex-col md:flex-row md:items-center pt-4">
+                <div class="md:flex-1 text-sm order-2 md:order-1">
+                    <ul class="flex items-center justify-center md:justify-start">
+                        <li class="mr-4">
+                            <a class="inline-block px-2 text-gray-600 hover:text-white hover:underline md:px-0"
+                                href="https://vanhack.com/terms-of-use/">Terms of Use</a>
+                        </li>
+                        <li class="mr-4">
+                            <a class="inline-block px-2 text-gray-600 hover:text-white hover:underline md:px-0"
+                                href="https://vanhack.com/privacy-policy/">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex items-center justify-center pt-4 pb-6 order-1 md:order-2 md:pt-0 md:pb-0 md:justify-end">
+                    <a class="block w-6 hover:text-blue-500 ml-4" title="LinkedIn"
+                        href="https://www.linkedin.com/company/vanhack/" target="_blank" rel="noopener noreferrer">
+                        <svg class="w-full h-auto fill-current" role="img" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>LinkedIn icon</title>
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a class="block w-6 hover:text-blue-500 ml-4" title="Twitter" href="https://twitter.com/GoVanHack"
+                        target="_blank" rel="noopener noreferrer">
+                        <svg class="w-full h-auto fill-current" role="img" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>Twitter icon</title>
+                            <path
+                                d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a class="block w-6 hover:text-blue-500 ml-4" title="Facebook"
+                        href="https://www.facebook.com/govanhack/" target="_blank" rel="noopener noreferrer">
+                        <svg class="w-full h-auto fill-current" role="img" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>Facebook icon</title>
+                            <path
+                                d="M23.9981 11.9991C23.9981 5.37216 18.626 0 11.9991 0C5.37216 0 0 5.37216 0 11.9991C0 17.9882 4.38789 22.9522 10.1242 23.8524V15.4676H7.07758V11.9991H10.1242V9.35553C10.1242 6.34826 11.9156 4.68714 14.6564 4.68714C15.9692 4.68714 17.3424 4.92149 17.3424 4.92149V7.87439H15.8294C14.3388 7.87439 13.8739 8.79933 13.8739 9.74824V11.9991H17.2018L16.6698 15.4676H13.8739V23.8524C19.6103 22.9522 23.9981 17.9882 23.9981 11.9991Z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a class="block w-6 hover:text-blue-500 ml-4" title="Instagram"
+                        href="https://www.instagram.com/govanhack/" target="_blank" rel="noopener noreferrer">
+                        <svg class="w-full h-auto fill-current" role="img" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>Instagram icon</title>
+                            <path
+                                d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
