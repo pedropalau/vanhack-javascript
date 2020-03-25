@@ -16,7 +16,7 @@ body {
 /** Spinner */
 .spinner {
     animation: spinner 1s ease-out infinite;
-    border: 4px solid #a0aec0;
+    border: 4px solid #3182ce;
     border-radius: 10em;
     height: 40px;
     width: 40px;

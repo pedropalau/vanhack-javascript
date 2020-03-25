@@ -99,11 +99,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
 
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -124,10 +142,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  */
 var API_ENDPOINT = 'https://vanhack-events.now.sh';
 var EVENTS_API_ENDPOINT = "".concat(API_ENDPOINT, "/events");
-/**
+/**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
  * for example to work with XMLHttpRequest.
+ * --------------------------------------------------------------- */
+
+/**
+ * Convert the given object to an array of key/valyes
+ * 
+ * @param {object} o 
  */
+
+var objToArray = function objToArray(o) {
+  return Object.keys(o).map(function (k) {
+    return {
+      key: k,
+      value: o[k]
+    };
+  });
+};
+/**
+ * Uppercase the first letter of the string
+ * 
+ * @param {string} str 
+ */
+
+
+var ucfirst = function ucfirst(str) {
+  return typeof str === 'string' ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+};
+/**
+ * Simple function to format dates for the given format
+ * 
+ * @param {Date} d 
+ * @param {object} f 
+ */
+
+
+var formatDate = function formatDate(d) {
+  var f = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  };
+  return d.toLocaleString('en-US', f);
+};
+/**
+ * Makes a simple ajax XMLHttpRequest request
+ * 
+ * @group utilities
+ * @param {string} endpoint 
+ * @param {object} args 
+ */
+
 
 var ajaxRequest = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(endpoint) {
@@ -171,12 +238,166 @@ var ajaxRequest = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
+/**
+ * Simple XMLHttpRequest get request
+ * @param {string} url 
+ */
+
 
 var get = function get(url) {
   return ajaxRequest(url, {
     method: 'GET'
   });
 };
+/**---------------------------------------------------------------
+ * Simple template renderer class
+ * --------------------------------------------------------------- */
+
+
+var Renderer = /*#__PURE__*/function () {
+  function Renderer() {
+    _classCallCheck(this, Renderer);
+
+    this.supported = 'content' in document.createElement('template');
+  }
+  /**
+   * Return the element with the selector from the document
+   * @param {string} selector 
+   */
+
+
+  _createClass(Renderer, [{
+    key: "getElement",
+    value: function getElement(selector) {
+      var clone = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      if (this.supported === false) {
+        // TODO: implement another way to get html content from the document
+        throw new Error('HTML template element is not supported in this browser.');
+      }
+
+      var el = document.querySelector(selector);
+
+      if (el === null) {
+        throw new Error("The element '".concat(selector, "' do not exists in this document."));
+      }
+
+      if (clone) {
+        var c = el.cloneNode(true);
+
+        if (c === null) {
+          throw new Error("An error ocurred while clonning the teplate ".concat(id));
+        }
+
+        return c;
+      }
+
+      return el;
+    }
+    /**
+     * Return an element by it's id
+     * 
+     * @param {string} id 
+     */
+
+  }, {
+    key: "getElementById",
+    value: function getElementById(id) {
+      return this.getElement("#".concat(id));
+    }
+    /**
+     * Return a html template
+     * @param {string} id 
+     */
+
+  }, {
+    key: "getTemplate",
+    value: function getTemplate(id) {
+      var tmpl = this.getElementById(id);
+
+      if (tmpl === null || tmpl.content === null) {
+        throw new Error("No template found for ".concat(id));
+      }
+
+      return tmpl.content.children[0].cloneNode(true);
+    }
+    /**
+     * Render the specified string
+     * 
+     * @param {string} tmpl The string template
+     * @param {object} args The arguments for the template
+     */
+
+  }, {
+    key: "render",
+    value: function render(tmpl) {
+      var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return new Function('return `' + tmpl + '`;').call(args);
+    }
+  }]);
+
+  return Renderer;
+}();
+
+var renderer = new Renderer();
+/**---------------------------------------------------------------
+ * Simple loader spinner representation
+ * --------------------------------------------------------------- */
+
+var Loader = /*#__PURE__*/function () {
+  /**
+   * The spinner html id (template source)
+   * 
+   * @param {string} elementId 
+   */
+  function Loader() {
+    var elementId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'spinner';
+
+    _classCallCheck(this, Loader);
+
+    this.elementId = elementId;
+    this.element = renderer.getElementById(this.elementId);
+  }
+  /**
+   * Show the spinner at the specified wrapper
+   * 
+   * @param {string} wrapperId
+   */
+
+
+  _createClass(Loader, [{
+    key: "show",
+    value: function show(wrapperId) {
+      var wrapper = document.getElementById(wrapperId);
+
+      if (wrapper === null) {
+        // If the element is not available using wrapperId as id, the try
+        // selecting the element with query selector
+        wrapper = document.querySelector(wrapperId);
+      }
+
+      if (wrapper === null) {
+        throw new Error("The wrapper with id=".concat(wrapperId, " do not exists in this document."));
+      }
+
+      this.wrapper = wrapper;
+      this.wrapper.appendChild(this.element);
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      if (this.wrapper !== null) {
+        this.wrapper.removeChild(this.element);
+      }
+    }
+  }]);
+
+  return Loader;
+}();
+/**---------------------------------------------------------------
+ * VanHack user representation
+ * --------------------------------------------------------------- */
+
 
 var User = function User(id, name) {
   _classCallCheck(this, User);
@@ -184,27 +405,180 @@ var User = function User(id, name) {
   this.id = id;
   this.name = name;
 };
-/**
+/**---------------------------------------------------------------
+ * Event object representation
+ * --------------------------------------------------------------- */
+
+
+var Event = function Event() {
+  var _this = this;
+
+  _classCallCheck(this, Event);
+
+  Array.prototype.slice.call(arguments).forEach(function (i) {
+    return _this[i.key] = i.value;
+  });
+};
+/**---------------------------------------------------------------
  * VanHack events-like application
- */
+ * --------------------------------------------------------------- */
 
 
 var VanHack = /*#__PURE__*/function () {
-  function VanHack() {
+  /**
+   * The current user
+   * 
+   * @param {User} user 
+   */
+  function VanHack(user) {
     _classCallCheck(this, VanHack);
+
+    this.loader = new Loader();
+    this.renderer = renderer;
+    this.selector = '[data-role="events"]';
+    this.container = this.renderer.getElement(this.selector, false);
   }
 
   _createClass(VanHack, [{
+    key: "showLoader",
+    value: function showLoader() {
+      this.loader.show(this.selector);
+    }
+  }, {
+    key: "hideLoader",
+    value: function hideLoader() {
+      this.loader.hide();
+    }
+  }, {
     key: "load",
     value: function load() {
+      this.showLoader();
       this.loadEvents();
     }
   }, {
     key: "loadEvents",
     value: function loadEvents() {
+      var _this2 = this;
+
       get(EVENTS_API_ENDPOINT).then(function (events) {
-        return console.log(events);
+        _this2.showEvents(events);
+
+        _this2.hideLoader();
       });
+    }
+    /**
+     * Show the list of events
+     * 
+     * @param {array} events 
+     */
+
+  }, {
+    key: "showEvents",
+    value: function showEvents(events) {
+      var _this3 = this;
+
+      if (events === null || events.length === 0) {
+        throw new Error('Invalid events source');
+      }
+
+      this.events = {};
+      events.forEach(function (e) {
+        _this3.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
+
+        _this3.renderEvent(e.id);
+      });
+    }
+    /**
+     * Render a specific event
+     * 
+     * @param {string} id 
+     */
+
+  }, {
+    key: "renderEvent",
+    value: function renderEvent(id) {
+      var block = this.renderer.getTemplate('eventBlock');
+      var event = this.events[id];
+      var self = this;
+      console.log(event);
+      Object.keys(event).forEach(function (k) {
+        var e = block.querySelector("[data-render-prop=\"".concat(k, "\"]"));
+
+        if ("render".concat(ucfirst(k)) in self) {
+          var r = self["render".concat(ucfirst(k))](event, block);
+
+          if (r && e !== null) {
+            e.innerHTML = r;
+          }
+        } else if (e !== null) {
+          e.innerHTML = event[k];
+        }
+      });
+      this.container.appendChild(block);
+    }
+  }, {
+    key: "renderId",
+    value: function renderId(e, v) {
+      var startMonthHtml = v.querySelector('[data-prop="start-month"]');
+      var startDayHtml = v.querySelector('[data-prop="start-day"]');
+      startMonthHtml.innerHTML = formatDate(new Date(e.start), {
+        month: 'long'
+      });
+      startDayHtml.innerHTML = formatDate(new Date(e.start), {
+        day: '2-digit'
+      });
+      this.renderCategory(e, v);
+      this.renderDateInfo(e, v);
+    }
+  }, {
+    key: "renderDateInfo",
+    value: function renderDateInfo(e, v) {
+      var startDate = new Date(e.start);
+      var endDate = new Date(e.end);
+      var currentDate = new Date();
+      var startFormat = {
+        month: 'long',
+        day: 'numeric'
+      };
+
+      if (startDate.getMonth() !== currentDate.getMonth()) {
+        startFormat.month = 'long';
+      }
+
+      if (startDate.getFullYear() !== currentDate.getFullYear()) {
+        startFormat.year = 'numeric';
+      }
+
+      var endFormat = {
+        day: 'numeric'
+      };
+
+      if (startDate.getMonth() !== endDate.getMonth()) {
+        endFormat.month = 'long';
+      }
+
+      if (startDate.getFullYear() !== endDate.getFullYear()) {
+        endFormat.year = 'numeric';
+      }
+
+      var dateHtml = v.querySelector('[data-prop="date"]');
+      dateHtml.innerHTML = "This event will take between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
+    }
+  }, {
+    key: "renderCategory",
+    value: function renderCategory(e, v) {
+      var categoryHtml = v.querySelector('[data-prop="category"]');
+      categoryHtml.innerHTML = 'Webinar';
+    }
+  }, {
+    key: "renderLocation",
+    value: function renderLocation(e) {
+      return "".concat(e.location.city, ", ").concat(e.location.country);
+    }
+  }, {
+    key: "renderDeadline",
+    value: function renderDeadline(e) {
+      return formatDate(new Date(e.deadline));
     }
   }]);
 
