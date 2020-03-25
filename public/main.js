@@ -395,6 +395,79 @@ var Loader = /*#__PURE__*/function () {
   return Loader;
 }();
 /**---------------------------------------------------------------
+ * Modal widget representation
+ * --------------------------------------------------------------- */
+
+
+var Modal = /*#__PURE__*/function () {
+  function Modal() {
+    _classCallCheck(this, Modal);
+
+    this.el = renderer.getTemplate('modal');
+    this.body = this.el.querySelector('[data-role="modal-content"]');
+    this.wrapper = document.body;
+    this.isShown = false; // Ensure the modal is hidden
+
+    this.hide();
+    this.bindEvents();
+  }
+
+  _createClass(Modal, [{
+    key: "hide",
+    value: function hide() {
+      if (this.el.className.split(" ").indexOf('hidden') === -1) {
+        this.el.className += ' hidden';
+      }
+    }
+  }, {
+    key: "show",
+    value: function show() {
+      if (this.isShown === true) {
+        throw new Error('The modal window is already visible');
+      }
+
+      this.el.className = Array.prototype.slice.call(this.el.classList).filter(function (c) {
+        return c !== 'hidden';
+      }).join(' ');
+      this.wrapper.appendChild(this.el);
+      this.isShown = true;
+    }
+  }, {
+    key: "setContent",
+    value: function setContent(content) {
+      this.body.appendChild(content);
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      if (this.isShown === false) {
+        throw new Error('The modal window is not visible');
+      }
+
+      this.hide();
+      this.destroy();
+      this.isShown = false;
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.wrapper.removeChild(this.el);
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents() {
+      var _this = this;
+
+      var closeButton = this.el.querySelector('[data-dismiss="modal"]');
+      closeButton.addEventListener('click', function () {
+        return _this.close();
+      });
+    }
+  }]);
+
+  return Modal;
+}();
+/**---------------------------------------------------------------
  * VanHack user representation
  * --------------------------------------------------------------- */
 
@@ -411,12 +484,12 @@ var User = function User(id, name) {
 
 
 var Event = function Event() {
-  var _this = this;
+  var _this2 = this;
 
   _classCallCheck(this, Event);
 
   Array.prototype.slice.call(arguments).forEach(function (i) {
-    return _this[i.key] = i.value;
+    return _this2[i.key] = i.value;
   });
 };
 /**---------------------------------------------------------------
@@ -458,13 +531,27 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "loadEvents",
     value: function loadEvents() {
-      var _this2 = this;
+      var _this3 = this;
 
       get(EVENTS_API_ENDPOINT).then(function (events) {
-        _this2.showEvents(events);
+        _this3.showEvents(events);
 
-        _this2.hideLoader();
+        _this3.hideLoader();
       });
+    }
+    /**
+     * Return the event of the list for given id
+     * @param {int} id 
+     */
+
+  }, {
+    key: "getEvent",
+    value: function getEvent(id) {
+      if (id in this.events === false) {
+        throw new Error("The event with id ".concat(id, " doesn't exists"));
+      }
+
+      return this.events[id];
     }
     /**
      * Show the list of events
@@ -475,7 +562,7 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "showEvents",
     value: function showEvents(events) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (events === null || events.length === 0) {
         throw new Error('Invalid events source');
@@ -483,10 +570,24 @@ var VanHack = /*#__PURE__*/function () {
 
       this.events = {};
       events.forEach(function (e) {
-        _this3.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
+        _this4.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
 
-        _this3.renderEvent(e.id);
+        _this4.renderEvent(e.id);
       });
+    }
+    /**
+     * Show the given event
+     * 
+     * @param {object} event 
+     */
+
+  }, {
+    key: "showEvent",
+    value: function showEvent(event) {
+      var modal = new Modal();
+      var view = this.renderer.getTemplate('eventDetails');
+      modal.setContent(view);
+      modal.show();
     }
     /**
      * Render a specific event
@@ -498,9 +599,8 @@ var VanHack = /*#__PURE__*/function () {
     key: "renderEvent",
     value: function renderEvent(id) {
       var block = this.renderer.getTemplate('eventBlock');
-      var event = this.events[id];
+      var event = this.getEvent(id);
       var self = this;
-      console.log(event);
       Object.keys(event).forEach(function (k) {
         var e = block.querySelector("[data-render-prop=\"".concat(k, "\"]"));
 
@@ -514,6 +614,8 @@ var VanHack = /*#__PURE__*/function () {
           e.innerHTML = event[k];
         }
       });
+      block.setAttribute('data-event-id', event.id);
+      this.bindEvents(id, block);
       this.container.appendChild(block);
     }
   }, {
@@ -592,6 +694,38 @@ var VanHack = /*#__PURE__*/function () {
     key: "renderDeadline",
     value: function renderDeadline(e) {
       return formatDate(new Date(e.deadline));
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents(id, v) {
+      var _this5 = this;
+
+      var actionView = v.querySelector('[data-action="view"]');
+      var actionApply = v.querySelector('[data-action="apply"]');
+
+      if (actionView !== null) {
+        actionView.addEventListener('click', function () {
+          return _this5.onViewHandler(id);
+        });
+      }
+
+      if (actionApply !== null) {
+        actionApply.addEventListener('click', function () {
+          return _this5.onApplyHandler(id);
+        });
+      }
+    }
+  }, {
+    key: "onViewHandler",
+    value: function onViewHandler(id) {
+      var event = this.getEvent(id);
+      this.showEvent(event);
+    }
+  }, {
+    key: "onApplyHandler",
+    value: function onApplyHandler(id) {
+      var event = this.getEvent(id);
+      console.log(event);
     }
   }]);
 

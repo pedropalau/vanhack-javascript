@@ -12,6 +12,7 @@
 </head>
 
 <body class="bg-gray-100">
+
     <div class="text-sm bg-gray-900 text-gray-100 shadow-md shadow-inset md:text-base">
         <div class="py-2 md:py-4 px-8 text-center">
             <em class="text-yellow-500 not-italic font-medium">COVID-19:</em> VanHack has decided not to host any
@@ -21,7 +22,7 @@
     <header class="w-full bg-white lg:bg-transparent lg:absolute lg:left-0 lg:right-0" role="banner">
         <div class="container mx-auto">
             <nav
-                class="px-4 py-6 relative z-50 overflow-hidden md:py-0 md:bg-white md:flex md:items-center md:h-20 md:px-8 lg:rounded-md lg:shadow-lg lg:max-w-screen-lg lg:mx-auto lg:mt-10">
+                class="px-4 py-6 relative z-40 overflow-hidden md:py-0 md:bg-white md:flex md:items-center md:h-20 md:px-8 lg:rounded-md lg:shadow-lg lg:max-w-screen-lg lg:mx-auto lg:mt-10">
                 <div class="flex items-center">
                     <a class="flex items-center flex-1" href="https://vanhack.com/" title="VanHack homepage">
                         <strong class="font-bold text-lg text-gray-900">VanHack</strong>
@@ -258,7 +259,7 @@
                             </div>
                         </div>
                         <div class="p-6 md:h-24 md:overflow-hidden">
-                            <p class="text-sm text-gray-600 leading-snug m-h-full">I've gone from interviewing a small
+                            <p class="text-sm text-gray-600 leading-snug max-h-full">I've gone from interviewing a small
                                 number of people and thinking that it's maybe not quite a fit to interviewing a ton of
                                 people and having the ability to pick and choose from an amazing pool of candidates.</p>
                         </div>
@@ -278,7 +279,8 @@
                             </div>
                         </div>
                         <div class="p-6 md:h-24 md:overflow-hidden">
-                            <p class="text-sm text-gray-600 leading-snug m-h-full">Working with VanHack was great. They
+                            <p class="text-sm text-gray-600 leading-snug max-h-full">Working with VanHack was great.
+                                They
                                 had a selection of developers with great technical skills and seemed like great culture
                                 contributors. We were able to hire 2 developers - at intermediate and senior levels. The
                                 VanHack team was responsive and a pleasure to work with.</p>
@@ -299,7 +301,7 @@
                             </div>
                         </div>
                         <div class="p-6 md:h-24 md:overflow-hidden">
-                            <p class="text-sm text-gray-600 leading-snug m-h-full">As VanHack possesses a true
+                            <p class="text-sm text-gray-600 leading-snug max-h-full">As VanHack possesses a true
                                 understanding of the tech industry, they easily built credibility with our tech team and
                                 broader leadership. Their attention to process extended beyond the point of their tech
                                 candidates putting pen to paper on offers.</p>
@@ -320,7 +322,7 @@
                             </div>
                         </div>
                         <div class="p-6 md:h-24 md:overflow-hidden">
-                            <p class="text-sm text-gray-600 leading-snug m-h-full">We have used VanHack's services on
+                            <p class="text-sm text-gray-600 leading-snug max-h-full">We have used VanHack's services on
                                 several occasions and they have been successful in bringing us candidates that fit into
                                 our culture driven, values based company at Traction on Demand.</p>
                         </div>
@@ -439,8 +441,9 @@
     </template>
 
     <template id="eventBlock">
-        <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0" data-render-prop="id">
-            <div class="flex-1 hidden">
+        <div class="flex flex-col shadow rounded-md bg-white overflow-hidden mb-10 md:mb-0" data-render-prop="id"
+            data-event-id="">
+            <div class="flex-1">
                 <img class="w-full h-auto"
                     src="https://images.unsplash.com/photo-1559511260-66a654ae982a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1992&q=100&w=400&h=300" />
             </div>
@@ -507,12 +510,72 @@
                     </div>
                 </div>
                 <div class="px-4 pb-4 mt-auto">
-                    <a class="block px-4 py-2 border-2 border-gray-300 text-center rounded-md mt-2 text-gray-700 font-medium hover:bg-gray-900 hover:text-white hover:border-transparent"
-                        href="#">View details</a>
-                    <a class="block px-4 py-2 bg-blue-500 text-center rounded-md mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-white"
-                        href="#">Apply now</a>
+                    <button
+                        class="block w-full px-4 py-2 border-2 border-gray-300 text-center rounded mt-2 text-gray-700 font-medium hover:bg-gray-900 hover:text-white hover:border-transparent"
+                        data-action="view">View details</button>
+                    <button
+                        class="block w-full px-4 py-2 bg-blue-500 text-center rounded mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-white"
+                        data-action="apply">Apply
+                        now</button>
                 </div>
             </div>
+        </div>
+    </template>
+
+    <template id="eventDetails">
+        <div class="event-details flex flex-col max-h-full items-stretch overflow-y-auto">
+            <div class="event-details__body flex flex-col items-stretch max-h-full">
+                <div class="px-10 py-4">
+                    <h2 class="text-2xl font-medium">Virtual Hiring Fair</h2>
+                    April 25 - 26, 2020
+                </div>
+                <div class="event-details__description text-base overflow-y-auto flex-1 p-10">
+                    <p>VanHack is hosting a Virtual Hiring Fair, April 25th and 26th.</p>
+        
+                    <p>If you are looking for a job in Canada or Europe you should apply! Some of the best
+                        companies
+                        in North America and Europe will be attending the virtual fair.</p>
+        
+                    <p>We are looking for candidates with more than 5 years of professional experience, good
+                        English
+                        and ready for a change.</p>
+        
+                    <p><strong>What to expect:</strong></p>
+        
+                    <ul>
+                        <li>Connect virtually with Companies in Canada and Europe</li>
+                        <li>Get a great preparation through VanHack</li>
+                        <li>Learn about the participating companies</li>
+                        <li>Get your profile forwarded to the companies</li>
+                        <li>Be ready to start remotely before relocating to Canada or Europe</li>
+                        <li>Be open to different cities in Canada and Europe (let us know if you have questions)</li>
+                    </ul>
+                    
+                    <p>This is an amazing chance to do interviews with international companies and land a job
+                    abroad.</p>
+        
+                    <p>Don't miss it!</p>
+                </div>
+            </div>
+            <div class="event-details__actions border-t border-gray-300 px-10 h-20 flex items-center justify-center">
+                <button class="block py-3 px-10 bg-blue-500 text-blue-100 font-medium rounded hover:bg-blue-700">Apply now</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="modal">
+        <div class="hidden fixed z-50 w-full h-full flex flex-col items-center justify-center top-0 left-0" tabindex="-1" role="dialog">
+            <div class="absolute top-0 bottom-0 z-20 w-full md:w-3/4" role="document">
+                <div class="w-full h-screen bg-white shadow-xl">
+                    <button type="button"
+                        class="text-4xl absolute top-0 right-0 mt-2 mr-2 flex items-center justify-center w-10 h-10 rounded-full text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                        data-dismiss="modal" aria-label="Close">
+                        <span class="block font-thin leading-none pb-1" aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="flex h-full" data-role="modal-content"></div>
+                </div>
+            </div>
+            <div class="absolute w-full h-full top-0 left-0 bg-gray-900 opacity-75 z-10"></div>
         </div>
     </template>
 

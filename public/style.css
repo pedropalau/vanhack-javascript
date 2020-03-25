@@ -100,3 +100,40 @@ body {
         margin-right: auto;
     }
 }
+
+/**
+ * Event details
+ * ---------------------------------------------------------------------------- */
+.event-details .event-details__description p,
+.event-details .event-details__description ul {
+    margin-bottom: 1rem;
+}
+
+.event-details .event-details__description ul {
+    color: #2d3748;
+}
+
+.event-details .event-details__description ul > li {
+    padding-left: 1.5em;
+    position: relative;
+}
+
+.event-details .event-details__description ul > li::before {
+    background-color: #4299e1;
+    border-radius: 10em;
+    content: "";
+    display: block;
+    height: 0.75rem;
+    left: 0;
+    position: absolute;
+    top: 0.4rem;
+    width: 0.75rem;
+}
+
+.event-details__body {
+    height: 86%;
+}
+
+.event-details .event-details__actions {
+    height: 14%;
+}

@@ -186,6 +186,64 @@ class Loader {
 }
 
 /**---------------------------------------------------------------
+ * Modal widget representation
+ * --------------------------------------------------------------- */
+class Modal {
+    constructor() {
+        this.el = renderer.getTemplate('modal')
+        this.body = this.el.querySelector('[data-role="modal-content"]')
+        this.wrapper = document.body;
+        this.isShown = false
+
+        // Ensure the modal is hidden
+        this.hide()
+
+        this.bindEvents()
+    }
+
+    hide() {
+        if (this.el.className.split(" ").indexOf('hidden') === -1) {
+            this.el.className += ' hidden'
+        }
+    }
+
+    show() {
+        if (this.isShown === true) {
+            throw new Error('The modal window is already visible')
+        }
+
+        this.el.className = Array.prototype.slice.call(this.el.classList)
+            .filter(c => c !== 'hidden').join(' ')
+        this.wrapper.appendChild(this.el)
+        this.isShown = true
+    }
+
+    setContent(content) {
+        this.body.appendChild(content)
+    }
+
+    close() {
+        if (this.isShown === false) {
+            throw new Error('The modal window is not visible')
+        }
+
+        this.hide()
+        this.destroy()
+
+        this.isShown = false
+    }
+
+    destroy() {
+        this.wrapper.removeChild(this.el)
+    }
+
+    bindEvents() {
+        const closeButton = this.el.querySelector('[data-dismiss="modal"]')
+        closeButton.addEventListener('click', () => this.close())
+    }
+}
+
+/**---------------------------------------------------------------
  * VanHack user representation
  * --------------------------------------------------------------- */
 class User {
@@ -243,6 +301,17 @@ class VanHack {
     }
 
     /**
+     * Return the event of the list for given id
+     * @param {int} id 
+     */
+    getEvent(id) {
+        if ((id in this.events) === false) {
+            throw new Error(`The event with id ${id} doesn't exists`)
+        }
+        return this.events[id]
+    }
+
+    /**
      * Show the list of events
      * 
      * @param {array} events 
@@ -261,16 +330,27 @@ class VanHack {
     }
 
     /**
+     * Show the given event
+     * 
+     * @param {object} event 
+     */
+    showEvent(event) {
+        const modal = new Modal()
+        const view = this.renderer.getTemplate('eventDetails')
+
+        modal.setContent(view)
+        modal.show()
+    }
+
+    /**
      * Render a specific event
      * 
      * @param {string} id 
      */
     renderEvent(id) {
         const block = this.renderer.getTemplate('eventBlock')
-        const event = this.events[id]
+        const event = this.getEvent(id)
         const self = this
-
-        console.log(event)
 
         Object.keys(event).forEach(k => {
             const e = block.querySelector(`[data-render-prop="${k}"]`)
@@ -283,6 +363,10 @@ class VanHack {
                 e.innerHTML = event[k]
             }            
         })
+
+        block.setAttribute('data-event-id', event.id)
+
+        this.bindEvents(id, block)
 
         this.container.appendChild(block)
     }
@@ -350,6 +434,29 @@ class VanHack {
 
     renderDeadline(e) {
         return formatDate(new Date(e.deadline))
+    }
+
+    bindEvents(id, v) {
+        const actionView = v.querySelector('[data-action="view"]')
+        const actionApply = v.querySelector('[data-action="apply"]')
+
+        if (actionView !== null) {
+            actionView.addEventListener('click', () => this.onViewHandler(id))
+        }
+
+        if (actionApply !== null) {
+            actionApply.addEventListener('click', () => this.onApplyHandler(id))
+        }
+    }
+
+    onViewHandler(id) {
+        const event = this.getEvent(id)
+        this.showEvent(event)
+    }
+
+    onApplyHandler(id) {
+        const event = this.getEvent(id)
+        console.log(event)
     }
 }
 
