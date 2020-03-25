@@ -153,7 +153,7 @@ class Loader {
      */
     constructor(elementId = 'spinner') {
         this.elementId = elementId;
-        this.element = renderer.getElementById(this.elementId)
+        this.element = renderer.getTemplate(this.elementId)
     }
 
     /**
@@ -290,11 +290,16 @@ class VanHack {
     renderId(e, v) {
         const startMonthHtml = v.querySelector('[data-prop="start-month"]')
         const startDayHtml = v.querySelector('[data-prop="start-day"]')
-        startMonthHtml.innerHTML = formatDate(new Date(e.start), {month: 'long'})
-        startDayHtml.innerHTML = formatDate(new Date(e.start), {day: '2-digit'})
+
+        if (startMonthHtml !== null) {
+            startMonthHtml.innerHTML = formatDate(new Date(e.start), {month: 'long'})
+        }
+
+        if (startDayHtml !== null) {
+            startDayHtml.innerHTML = formatDate(new Date(e.start), {day: '2-digit'})
+        }        
 
         this.renderCategory(e, v)
-
         this.renderDateInfo(e, v)
     }
 
@@ -327,12 +332,16 @@ class VanHack {
         }
 
         const dateHtml = v.querySelector('[data-prop="date"]')
-        dateHtml.innerHTML = `This event will take between ${formatDate(startDate, startFormat)} and ${formatDate(endDate, endFormat)}`
+        if (dateHtml !== null) {
+            dateHtml.innerHTML = `This event will take between ${formatDate(startDate, startFormat)} and ${formatDate(endDate, endFormat)}`
+        }
     }
 
     renderCategory(e, v) {
         const categoryHtml = v.querySelector('[data-prop="category"]')
-        categoryHtml.innerHTML = 'Webinar'
+        if (categoryHtml !== null) {
+            categoryHtml.innerHTML = 'Webinar'
+        }
     }
 
     renderLocation(e) {

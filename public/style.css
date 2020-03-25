@@ -14,7 +14,7 @@ body {
 }
 
 /** Spinner */
-.spinner {
+.spinner-el {
     animation: spinner 1s ease-out infinite;
     border: 4px solid #3182ce;
     border-radius: 10em;
@@ -37,7 +37,6 @@ body {
         transform: scale(1);
     } 
 }
-  
 
 /**
  * Interactions
@@ -75,5 +74,29 @@ body {
         opacity: 0.75;
         pointer-events: all;
         z-index: 100;
+    }
+}
+
+/**
+ * Content
+ * ---------------------------------------------------------------------------- */
+@media (min-width: 767px) {
+    [data-role="events"] {
+        min-height: 20rem;
+    }
+
+    [data-role="events"] .spinner {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top: -20px;
+        width: 100%;
+    }
+
+    .spinner-el {
+        margin-left: auto;
+        margin-right: auto;
     }
 }

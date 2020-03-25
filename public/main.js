@@ -356,7 +356,7 @@ var Loader = /*#__PURE__*/function () {
     _classCallCheck(this, Loader);
 
     this.elementId = elementId;
-    this.element = renderer.getElementById(this.elementId);
+    this.element = renderer.getTemplate(this.elementId);
   }
   /**
    * Show the spinner at the specified wrapper
@@ -521,12 +521,19 @@ var VanHack = /*#__PURE__*/function () {
     value: function renderId(e, v) {
       var startMonthHtml = v.querySelector('[data-prop="start-month"]');
       var startDayHtml = v.querySelector('[data-prop="start-day"]');
-      startMonthHtml.innerHTML = formatDate(new Date(e.start), {
-        month: 'long'
-      });
-      startDayHtml.innerHTML = formatDate(new Date(e.start), {
-        day: '2-digit'
-      });
+
+      if (startMonthHtml !== null) {
+        startMonthHtml.innerHTML = formatDate(new Date(e.start), {
+          month: 'long'
+        });
+      }
+
+      if (startDayHtml !== null) {
+        startDayHtml.innerHTML = formatDate(new Date(e.start), {
+          day: '2-digit'
+        });
+      }
+
       this.renderCategory(e, v);
       this.renderDateInfo(e, v);
     }
@@ -562,13 +569,19 @@ var VanHack = /*#__PURE__*/function () {
       }
 
       var dateHtml = v.querySelector('[data-prop="date"]');
-      dateHtml.innerHTML = "This event will take between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
+
+      if (dateHtml !== null) {
+        dateHtml.innerHTML = "This event will take between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
+      }
     }
   }, {
     key: "renderCategory",
     value: function renderCategory(e, v) {
       var categoryHtml = v.querySelector('[data-prop="category"]');
-      categoryHtml.innerHTML = 'Webinar';
+
+      if (categoryHtml !== null) {
+        categoryHtml.innerHTML = 'Webinar';
+      }
     }
   }, {
     key: "renderLocation",
