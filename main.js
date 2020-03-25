@@ -70,6 +70,62 @@ const get = (url) => {
     })
 }
 
+/**
+ * Adds the given class to the object
+ * 
+ * @param {object} el 
+ * @param {array|string} className 
+ */
+const addClass = (el, className) => {
+    if (typeof(className) === 'string') {
+        className = [className]
+    }
+
+    className.forEach(c => {
+        if (classExists(el, c) === false) {
+            el.className += ` ${c}`
+        }
+    })
+}
+
+/**
+ * Removes the given class from the element
+ * 
+ * @param {object} el 
+ * @param {string} className 
+ */
+const removeClass = (el, className) => {
+    if (classExists(el, className)) {
+        el.className = Array.prototype.slice.call(el.classList)
+            .filter(c => c !== className)
+            .join(' ')
+    }
+}
+
+/**
+ * Check if the given element has the given class
+ * 
+ * @param {object} el 
+ * @param {string} className 
+ */
+const classExists = (el, className) => Array.prototype.slice.call(el.classList).includes(className)
+
+/**
+ * Adds a property=value to the given element
+ * 
+ * @param {object} el 
+ * @param {string} prop 
+ * @param {bool|string} value 
+ */
+const addProperty = (el, prop, value) => el.setAttribute(prop, value)
+
+/**
+ * Removes a property from the given element
+ * @param {object} el 
+ * @param {string} prop 
+ */
+const removeProperty = (el, prop) => el.removeAttribute(prop)
+
 /**---------------------------------------------------------------
  * Simple template renderer class
  * --------------------------------------------------------------- */
@@ -202,9 +258,7 @@ class Modal {
     }
 
     hide() {
-        if (this.el.className.split(" ").indexOf('hidden') === -1) {
-            this.el.className += ' hidden'
-        }
+        addClass(this.el, 'hidden')
     }
 
     show() {
@@ -212,8 +266,7 @@ class Modal {
             throw new Error('The modal window is already visible')
         }
 
-        this.el.className = Array.prototype.slice.call(this.el.classList)
-            .filter(c => c !== 'hidden').join(' ')
+        removeClass(this.el, 'hidden')
         this.wrapper.appendChild(this.el)
         this.isShown = true
     }
@@ -250,6 +303,29 @@ class User {
     constructor(id, name) {
         this.id = id
         this.name = name
+        this.events = []
+    }
+
+    /**
+     * Add the given event to the list of applied events
+     * 
+     * @param {int} id 
+     */
+    applyForEvent(id) {
+        if (this.hasApplied(id) === true) {
+            throw new Error(`The user has already applied to the given event with id ${id}`)
+        }
+
+        this.events.push(id)
+    }
+
+    /**
+     * Check if the user has applied to the given event
+     * 
+     * @param {int} id 
+     */
+    hasApplied(id) {
+        return this.events.includes(id)
     }
 }
 
@@ -277,6 +353,7 @@ class VanHack {
         this.renderer = renderer
         this.selector = '[data-role="events"]'
         this.container = this.renderer.getElement(this.selector, false)
+        this.user = user
     }
 
     showLoader() {
@@ -324,6 +401,7 @@ class VanHack {
         this.events = {}
        
         events.forEach(e => {
+            e.applied && this.user.applyForEvent(e.id)
             this.events[e.id] = new Event(...objToArray(e))
             this.renderEvent(e.id)
         })
@@ -340,6 +418,44 @@ class VanHack {
 
         modal.setContent(view)
         modal.show()
+    }
+
+    /**
+     * Apply for the given event
+     * 
+     * @param {object} event 
+     */
+    applyForEvent(event) {
+        if (this.user.hasApplied(event.id) === false) {
+            event.applied = true
+            this.disableEventApplying(event)
+        }
+    }
+    
+    /**
+     * Disables the given event for applying
+     * 
+     * @param {object} event 
+     */
+    disableEventApplying(event) {
+        const eventView = this.container.querySelector(`[data-event-id="${event.id}"]`)
+        if (eventView !== null) {
+            console.log(eventView)
+            this.disableEventApplyButton(eventView)
+        }
+    }
+
+    /**
+     * Disables the apply button for the given event
+     * 
+     * @param {object} v 
+     */
+    disableEventApplyButton(v) {
+        const applyButton = v.querySelector('[data-action="apply"]')
+        if (applyButton !== null) {
+            addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none')
+            addProperty(applyButton, 'disabled', true)
+        }
     }
 
     /**
@@ -367,6 +483,8 @@ class VanHack {
         block.setAttribute('data-event-id', event.id)
 
         this.bindEvents(id, block)
+
+        event.applied && this.disableEventApplyButton(block)
 
         this.container.appendChild(block)
     }
@@ -456,7 +574,7 @@ class VanHack {
 
     onApplyHandler(id) {
         const event = this.getEvent(id)
-        console.log(event)
+        this.applyForEvent(event)
     }
 }
 

@@ -249,6 +249,73 @@ var get = function get(url) {
     method: 'GET'
   });
 };
+/**
+ * Adds the given class to the object
+ * 
+ * @param {object} el 
+ * @param {array|string} className 
+ */
+
+
+var addClass = function addClass(el, className) {
+  if (typeof className === 'string') {
+    className = [className];
+  }
+
+  className.forEach(function (c) {
+    if (classExists(el, c) === false) {
+      el.className += " ".concat(c);
+    }
+  });
+};
+/**
+ * Removes the given class from the element
+ * 
+ * @param {object} el 
+ * @param {string} className 
+ */
+
+
+var removeClass = function removeClass(el, className) {
+  if (classExists(el, className)) {
+    el.className = Array.prototype.slice.call(el.classList).filter(function (c) {
+      return c !== className;
+    }).join(' ');
+  }
+};
+/**
+ * Check if the given element has the given class
+ * 
+ * @param {object} el 
+ * @param {string} className 
+ */
+
+
+var classExists = function classExists(el, className) {
+  return Array.prototype.slice.call(el.classList).includes(className);
+};
+/**
+ * Adds a property=value to the given element
+ * 
+ * @param {object} el 
+ * @param {string} prop 
+ * @param {bool|string} value 
+ */
+
+
+var addProperty = function addProperty(el, prop, value) {
+  return el.setAttribute(prop, value);
+};
+/**
+ * Removes a property from the given element
+ * @param {object} el 
+ * @param {string} prop 
+ */
+
+
+var removeProperty = function removeProperty(el, prop) {
+  return el.removeAttribute(prop);
+};
 /**---------------------------------------------------------------
  * Simple template renderer class
  * --------------------------------------------------------------- */
@@ -415,9 +482,7 @@ var Modal = /*#__PURE__*/function () {
   _createClass(Modal, [{
     key: "hide",
     value: function hide() {
-      if (this.el.className.split(" ").indexOf('hidden') === -1) {
-        this.el.className += ' hidden';
-      }
+      addClass(this.el, 'hidden');
     }
   }, {
     key: "show",
@@ -426,9 +491,7 @@ var Modal = /*#__PURE__*/function () {
         throw new Error('The modal window is already visible');
       }
 
-      this.el.className = Array.prototype.slice.call(this.el.classList).filter(function (c) {
-        return c !== 'hidden';
-      }).join(' ');
+      removeClass(this.el, 'hidden');
       this.wrapper.appendChild(this.el);
       this.isShown = true;
     }
@@ -472,12 +535,45 @@ var Modal = /*#__PURE__*/function () {
  * --------------------------------------------------------------- */
 
 
-var User = function User(id, name) {
-  _classCallCheck(this, User);
+var User = /*#__PURE__*/function () {
+  function User(id, name) {
+    _classCallCheck(this, User);
 
-  this.id = id;
-  this.name = name;
-};
+    this.id = id;
+    this.name = name;
+    this.events = [];
+  }
+  /**
+   * Add the given event to the list of applied events
+   * 
+   * @param {int} id 
+   */
+
+
+  _createClass(User, [{
+    key: "applyForEvent",
+    value: function applyForEvent(id) {
+      if (this.hasApplied(id) === true) {
+        throw new Error("The user has already applied to the given event with id ".concat(id));
+      }
+
+      this.events.push(id);
+    }
+    /**
+     * Check if the user has applied to the given event
+     * 
+     * @param {int} id 
+     */
+
+  }, {
+    key: "hasApplied",
+    value: function hasApplied(id) {
+      return this.events.includes(id);
+    }
+  }]);
+
+  return User;
+}();
 /**---------------------------------------------------------------
  * Event object representation
  * --------------------------------------------------------------- */
@@ -510,6 +606,7 @@ var VanHack = /*#__PURE__*/function () {
     this.renderer = renderer;
     this.selector = '[data-role="events"]';
     this.container = this.renderer.getElement(this.selector, false);
+    this.user = user;
   }
 
   _createClass(VanHack, [{
@@ -570,6 +667,7 @@ var VanHack = /*#__PURE__*/function () {
 
       this.events = {};
       events.forEach(function (e) {
+        e.applied && _this4.user.applyForEvent(e.id);
         _this4.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
 
         _this4.renderEvent(e.id);
@@ -588,6 +686,52 @@ var VanHack = /*#__PURE__*/function () {
       var view = this.renderer.getTemplate('eventDetails');
       modal.setContent(view);
       modal.show();
+    }
+    /**
+     * Apply for the given event
+     * 
+     * @param {object} event 
+     */
+
+  }, {
+    key: "applyForEvent",
+    value: function applyForEvent(event) {
+      if (this.user.hasApplied(event.id) === false) {
+        event.applied = true;
+        this.disableEventApplying(event);
+      }
+    }
+    /**
+     * Disables the given event for applying
+     * 
+     * @param {object} event 
+     */
+
+  }, {
+    key: "disableEventApplying",
+    value: function disableEventApplying(event) {
+      var eventView = this.container.querySelector("[data-event-id=\"".concat(event.id, "\"]"));
+
+      if (eventView !== null) {
+        console.log(eventView);
+        this.disableEventApplyButton(eventView);
+      }
+    }
+    /**
+     * Disables the apply button for the given event
+     * 
+     * @param {object} v 
+     */
+
+  }, {
+    key: "disableEventApplyButton",
+    value: function disableEventApplyButton(v) {
+      var applyButton = v.querySelector('[data-action="apply"]');
+
+      if (applyButton !== null) {
+        addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none');
+        addProperty(applyButton, 'disabled', true);
+      }
     }
     /**
      * Render a specific event
@@ -616,6 +760,7 @@ var VanHack = /*#__PURE__*/function () {
       });
       block.setAttribute('data-event-id', event.id);
       this.bindEvents(id, block);
+      event.applied && this.disableEventApplyButton(block);
       this.container.appendChild(block);
     }
   }, {
@@ -725,7 +870,7 @@ var VanHack = /*#__PURE__*/function () {
     key: "onApplyHandler",
     value: function onApplyHandler(id) {
       var event = this.getEvent(id);
-      console.log(event);
+      this.applyForEvent(event);
     }
   }]);
 
