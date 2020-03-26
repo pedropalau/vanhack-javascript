@@ -559,12 +559,14 @@
                 </div>
                 <div class="px-4 pb-4 mt-auto">
                     <button
-                        class="block w-full px-4 py-2 border-2 border-gray-300 text-center rounded mt-2 text-gray-700 font-medium hover:bg-gray-900 hover:text-white hover:border-transparent"
+                        class="block w-full px-4 py-2 border-2 border-gray-300 text-center rounded mt-2 text-gray-700 font-medium hover:bg-gray-900 hover:text-gray-100 hover:border-transparent"
                         data-action="view">View details</button>
                     <button
-                        class="block w-full px-4 py-2 bg-blue-500 text-center rounded mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-white"
-                        data-action="apply">Apply
-                        now</button>
+                        class="block w-full px-4 py-2 bg-blue-500 text-center rounded mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-blue-100"
+                        data-action="apply" data-premium="false">Apply now</button>
+                    <button
+                        class="hidden block w-full px-4 py-2 bg-gray-900 text-center rounded mt-2 text-green-100 font-medium hover:bg-gray-700 hover:text-gray-100"
+                        data-action="apply" data-premium="true">Upgrade your account</button>
                 </div>
             </div>
         </div>
@@ -596,7 +598,8 @@
                                 </div>
                                 <div class="flex-1 flex items-center">
                                     <div class="text-gray-700 hidden md:block">Location</div>
-                                    <span class="flex-1 border-t-2 border-gray-300 border-dotted mx-2 hidden md:block"></span>
+                                    <span
+                                        class="flex-1 border-t-2 border-gray-300 border-dotted mx-2 hidden md:block"></span>
                                     <div class="font-medium" data-render-prop="location"></div>
                                 </div>
                             </div>
@@ -611,23 +614,33 @@
                                 </div>
                                 <div class="flex-1 flex items-center">
                                     <div class="text-gray-700 hidden md:block">Deadline</div>
-                                    <span class="flex-1 border-t-2 border-gray-300 border-dotted mx-2 hidden md:block"></span>
+                                    <span
+                                        class="flex-1 border-t-2 border-gray-300 border-dotted mx-2 hidden md:block"></span>
                                     <div class="font-medium" data-render-prop="deadline"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="py-2 md:hidden">
-                            <button class="block w-full text-center py-3 px-10 bg-blue-500 text-blue-100 font-medium rounded hover:bg-blue-700"
-                                data-action="apply">Apply now</button>
+                        <div class="py-3 md:hidden">
+                            <button
+                                class="px-6 py-3 bg-blue-500 text-center rounded mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-blue-100"
+                                data-action="apply" data-premium="false">Apply now</button>
+                            <button
+                                class="hidden px-6 py-3 bg-gray-900 text-center rounded mt-2 text-green-100 font-medium hover:bg-gray-700 hover:text-gray-100"
+                                data-action="apply" data-premium="true">Upgrade your account</button>
                         </div>
                     </div>
                 </div>
                 <div class="event-details__description text-base p-10 bg-gray-100 md:relative md:z-10 md:overflow-y-auto md:flex-1"
                     data-render-prop="description"></div>
             </div>
-            <div class="event-details__actions border-t border-gray-300 px-10 py-6 flex items-center justify-center md:py-0">
-                <button class="block py-3 px-10 bg-blue-500 text-blue-100 font-medium rounded hover:bg-blue-700"
-                    data-action="apply">Apply now</button>
+            <div
+                class="event-details__actions border-t border-gray-300 px-10 py-6 flex items-center justify-center md:py-0">
+                <button
+                    class="px-6 py-3 bg-blue-500 text-center rounded mt-2 text-blue-100 font-medium hover:bg-blue-700 hover:text-blue-100"
+                    data-action="apply" data-premium="false">Apply now</button>
+                <button
+                    class="hidden px-6 py-3 bg-gray-900 text-center rounded mt-2 text-green-100 font-medium hover:bg-gray-700 hover:text-gray-100"
+                    data-action="apply" data-premium="true">Upgrade your account</button>
             </div>
         </div>
     </template>
@@ -643,7 +656,8 @@
                         <span class="block font-thin leading-none pb-1 text-4xl" aria-hidden="true">&times;</span>
                         <span class="block ml-2 font-medium md:hidden">Close</span>
                     </button>
-                    <div class="relative z-10 h-full overflow-y-auto pb-12 md:pb-0 md:flex" data-role="modal-content"></div>
+                    <div class="relative z-10 h-full overflow-y-auto pb-12 md:pb-0 md:flex" data-role="modal-content">
+                    </div>
                 </div>
             </div>
             <div class="absolute w-full h-full top-0 left-0 bg-gray-900 opacity-75 z-10"></div>
@@ -652,6 +666,91 @@
 
     <template id="eventType">
         <button class="block px-4 py-1 rounded border m-1"></button>
+    </template>
+
+    <template id="premiumNotice">
+        <div class="flex flex-col items-center justify-center text-center p-10 w-full md:p-20">
+            <svg class="mb-3 text-green-500 stroke-current" viewBox="0 0 24 24" width="120" height="120"
+                stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17 11 19 13 23 9" class="text-green-300 stroke-current"></polyline>
+            </svg>
+            <h3 class="text-3xl font-medium mb-4">Become premium</h3>
+            <p class="text-base text-gray-700 mb-4 mx-auto max-w-screen-sm">Our VanHack Premium is a complete package of
+                services to help you sharpen your job interview & English skills, network and mindset needed to get
+                hired abroad.</p>
+            <div class="text-sm max-w-screen-md mx-auto py-10 md:grid md:grid-cols-2 md:gap-10">
+                <div class="md:pr-1">
+                    <ul class="text-left flex flex-col justify-start">
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            More than 40 hours of Interview Practice in English per month.
+                        </li>
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>+100 hours of Step-by-Step video course showing you how to get a job abroad
+                        </li>
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>Exclusive Slack Community for you and your family to share industry insights and grow
+                            together
+                        </li>
+                    </ul>
+                </div>
+                <div class="md:pl-1">
+                    <ul class="text-left flex flex-col justify-start">
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>Community support to help you on your journey to find a great job abroad
+                        </li>
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>Profile Review and exclusive monthly webinars and Career Coach LIVE sessions
+                        </li>
+                        <li class="flex items-start">
+                            <div class="text-green-500 pt-1 mr-2">
+                                <svg class="stroke-current" viewBox="0 0 24 24" width="16" height="16"
+                                    stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>Unlimited access to our team to guide you along with your job search
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <a class="inline-block px-6 py-3 bg-blue-500 text-blue-100 rounded font-medium hover:bg-blue-700 hover:text-blue-100"
+                href="https://vanhack.com/checkout" target="_blank" rel="noopener noreferrer" data-action="go">
+                Join VanHack premium today
+            </a>
+        </div>
     </template>
 
     <script type="text/javascript" src="main.js"></script>

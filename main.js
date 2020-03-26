@@ -250,11 +250,15 @@ class Loader {
  * Modal widget representation
  * --------------------------------------------------------------- */
 class Modal {
-    constructor() {
+    constructor(content = null) {
         this.el = renderer.getTemplate('modal')
         this.body = this.el.querySelector('[data-role="modal-content"]')
         this.wrapper = document.body;
         this.isShown = false
+
+        if (content !== null) {
+            this.setContent(content)
+        }
 
         // Ensure the modal is hidden
         this.hide()
@@ -481,7 +485,11 @@ class VanHack {
 
         this.renderEventProps(event, view)
 
-        if (event.applied) {
+        if (event.premium === true) {
+            const upgradeButton = view.querySelectorAll('[data-premium="true"]')
+            upgradeButton.forEach(b => b.addEventListener('click', () => modal.close()))
+            this.processPremiumEvent(event, view)
+        } else if (event.applied === true) {
             this.disableEventApplyButton(view)
         }
 
@@ -489,6 +497,19 @@ class VanHack {
 
         modal.setContent(view)
         modal.show()
+    }
+
+    processPremiumEvent(event, view) {
+        const applyNoPremium = view.querySelectorAll('[data-premium="false"]')
+        const applyPremiumOnly = view.querySelectorAll('[data-premium="true"]')
+
+        if (event.premium === true) {
+            applyNoPremium.forEach(b => addClass(b, 'hidden'))
+            applyPremiumOnly.forEach(b => removeClass(b, 'hidden'))
+        } else {
+            applyPremiumOnly.forEach(b => addClass(b, 'hidden'))
+            applyNoPremium.forEach(b => removeClass(b, 'hidden'))
+        }
     }
 
     /**
@@ -545,6 +566,8 @@ class VanHack {
         this.bindEventEvents(id, block)
 
         event.applied && this.disableEventApplyButton(block)
+
+        this.processPremiumEvent(event, block)
 
         if (type.highlight === true) {
             this.containerHighlight.appendChild(block)
@@ -679,7 +702,20 @@ class VanHack {
 
     onApplyHandler(id) {
         const event = this.getEvent(id)
-        this.applyForEvent(event)
+
+        if (event.premium === true) {
+            this.showPremiumNotice(event)
+        } else {
+            this.applyForEvent(event)
+        }
+    }
+
+    showPremiumNotice(event) {
+        const premiumNoticeHtml = this.renderer.getTemplate('premiumNotice')
+        const premiumButton = premiumNoticeHtml.querySelector('[data-action="go"]')
+        const premiumModal = new Modal(premiumNoticeHtml)
+        premiumButton.addEventListener('click', () => premiumModal.close())
+        premiumModal.show()
     }
 }
 

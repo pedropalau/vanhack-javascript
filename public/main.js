@@ -470,12 +470,19 @@ var Loader = /*#__PURE__*/function () {
 
 var Modal = /*#__PURE__*/function () {
   function Modal() {
+    var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
     _classCallCheck(this, Modal);
 
     this.el = renderer.getTemplate('modal');
     this.body = this.el.querySelector('[data-role="modal-content"]');
     this.wrapper = document.body;
-    this.isShown = false; // Ensure the modal is hidden
+    this.isShown = false;
+
+    if (content !== null) {
+      this.setContent(content);
+    } // Ensure the modal is hidden
+
 
     this.hide();
     this.bindEvents();
@@ -750,13 +757,43 @@ var VanHack = /*#__PURE__*/function () {
       var view = this.renderer.getTemplate('eventDetails');
       this.renderEventProps(event, view);
 
-      if (event.applied) {
+      if (event.premium === true) {
+        var upgradeButton = view.querySelectorAll('[data-premium="true"]');
+        upgradeButton.forEach(function (b) {
+          return b.addEventListener('click', function () {
+            return modal.close();
+          });
+        });
+        this.processPremiumEvent(event, view);
+      } else if (event.applied === true) {
         this.disableEventApplyButton(view);
       }
 
       this.bindEventEvents(event.id, view);
       modal.setContent(view);
       modal.show();
+    }
+  }, {
+    key: "processPremiumEvent",
+    value: function processPremiumEvent(event, view) {
+      var applyNoPremium = view.querySelectorAll('[data-premium="false"]');
+      var applyPremiumOnly = view.querySelectorAll('[data-premium="true"]');
+
+      if (event.premium === true) {
+        applyNoPremium.forEach(function (b) {
+          return addClass(b, 'hidden');
+        });
+        applyPremiumOnly.forEach(function (b) {
+          return removeClass(b, 'hidden');
+        });
+      } else {
+        applyPremiumOnly.forEach(function (b) {
+          return addClass(b, 'hidden');
+        });
+        applyNoPremium.forEach(function (b) {
+          return removeClass(b, 'hidden');
+        });
+      }
     }
     /**
      * Apply for the given event
@@ -824,6 +861,7 @@ var VanHack = /*#__PURE__*/function () {
       this.renderEventProps(event, block);
       this.bindEventEvents(id, block);
       event.applied && this.disableEventApplyButton(block);
+      this.processPremiumEvent(event, block);
 
       if (type.highlight === true) {
         this.containerHighlight.appendChild(block);
@@ -986,7 +1024,23 @@ var VanHack = /*#__PURE__*/function () {
     key: "onApplyHandler",
     value: function onApplyHandler(id) {
       var event = this.getEvent(id);
-      this.applyForEvent(event);
+
+      if (event.premium === true) {
+        this.showPremiumNotice(event);
+      } else {
+        this.applyForEvent(event);
+      }
+    }
+  }, {
+    key: "showPremiumNotice",
+    value: function showPremiumNotice(event) {
+      var premiumNoticeHtml = this.renderer.getTemplate('premiumNotice');
+      var premiumButton = premiumNoticeHtml.querySelector('[data-action="go"]');
+      var premiumModal = new Modal(premiumNoticeHtml);
+      premiumButton.addEventListener('click', function () {
+        return premiumModal.close();
+      });
+      premiumModal.show();
     }
   }]);
 
