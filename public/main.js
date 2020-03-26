@@ -274,7 +274,7 @@ var addClass = function addClass(el, className) {
   }
 
   className.forEach(function (c) {
-    if (classExists(el, c) === false) {
+    if (hasClass(el, c) === false) {
       el.className += " ".concat(c);
     }
   });
@@ -288,7 +288,7 @@ var addClass = function addClass(el, className) {
 
 
 var removeClass = function removeClass(el, className) {
-  if (classExists(el, className)) {
+  if (hasClass(el, className)) {
     el.className = Array.prototype.slice.call(el.classList).filter(function (c) {
       return c !== className;
     }).join(' ');
@@ -302,7 +302,7 @@ var removeClass = function removeClass(el, className) {
  */
 
 
-var classExists = function classExists(el, className) {
+var hasClass = function hasClass(el, className) {
   return Array.prototype.slice.call(el.classList).includes(className);
 };
 /**
@@ -626,7 +626,6 @@ var VanHack = /*#__PURE__*/function () {
   function VanHack(user) {
     _classCallCheck(this, VanHack);
 
-    this.loader = new Loader();
     this.renderer = renderer;
     this.selector = '[data-role="events"]';
     this.selectorHighlight = '[data-role="events-highlight"]';
@@ -638,19 +637,8 @@ var VanHack = /*#__PURE__*/function () {
   }
 
   _createClass(VanHack, [{
-    key: "showLoader",
-    value: function showLoader() {
-      this.loader.show(this.selector);
-    }
-  }, {
-    key: "hideLoader",
-    value: function hideLoader() {
-      this.loader.hide();
-    }
-  }, {
     key: "load",
     value: function load() {
-      this.showLoader();
       this.loadEventsTypes();
     }
   }, {
@@ -675,8 +663,6 @@ var VanHack = /*#__PURE__*/function () {
 
       get(EVENTS_API_ENDPOINT).then(function (events) {
         _this4.showEvents(events);
-
-        _this4.hideLoader();
       });
     }
     /**
@@ -706,10 +692,11 @@ var VanHack = /*#__PURE__*/function () {
       var _this5 = this;
 
       this.types = types;
+      this.typesContainer.innerHTML = '';
       Object.keys(this.types).forEach(function (k) {
         var type = _this5.types[k];
 
-        var typeHtml = _this5.renderType(type);
+        var typeHtml = _this5.renderType(k, type);
 
         _this5.typesContainer.appendChild(typeHtml);
       });
@@ -717,12 +704,15 @@ var VanHack = /*#__PURE__*/function () {
     /**
      * Render the html for the custom type
      * 
-     * @param {object} type 
+     * @param {string} name The name (slug) of the category
+     * @param {object} type The object information of the category
      */
 
   }, {
     key: "renderType",
-    value: function renderType(type) {
+    value: function renderType(name, type) {
+      var _this6 = this;
+
       var typeHtml = this.renderer.getTemplate('eventType');
       typeHtml.innerHTML = type.name;
       addClass(typeHtml, "bg-".concat(type.colors.primary));
@@ -730,7 +720,66 @@ var VanHack = /*#__PURE__*/function () {
       addClass(typeHtml, "text-".concat(type.colors.secondary));
       addClass(typeHtml, "hover:bg-".concat(type.colors.secondary));
       addClass(typeHtml, "hover:text-".concat(type.colors.primary));
+      setProperty(typeHtml, 'data-type', name);
+      typeHtml.addEventListener('click', function () {
+        return _this6.filterByType(name);
+      });
       return typeHtml;
+    }
+    /**
+     * Handler to filter events by type
+     * @param {string} name The category name (slug)
+     */
+
+  }, {
+    key: "filterByType",
+    value: function filterByType(name) {
+      var type = this.types[name];
+      var typeHtml = this.typesContainer.querySelector("[data-type=\"".concat(name, "\"]"));
+
+      if (hasClass(typeHtml, 'active') === false) {
+        removeClass(typeHtml, "text-".concat(type.colors.secondary));
+        removeClass(typeHtml, "bg-".concat(type.colors.primary));
+        addClass(typeHtml, "text-".concat(type.colors.primary));
+        addClass(typeHtml, "bg-".concat(type.colors.secondary));
+        addClass(typeHtml, 'active');
+        setProperty(typeHtml, 'data-active', true);
+      } else {
+        addClass(typeHtml, "text-".concat(type.colors.secondary));
+        addClass(typeHtml, "bg-".concat(type.colors.primary));
+        removeClass(typeHtml, "text-".concat(type.colors.primary));
+        removeClass(typeHtml, "bg-".concat(type.colors.secondary));
+        removeClass(typeHtml, 'active');
+        removeProperty(typeHtml, 'data-active', true);
+      }
+
+      this.filterEvents();
+    }
+    /**
+     * Filter events by selected types
+     */
+
+  }, {
+    key: "filterEvents",
+    value: function filterEvents() {
+      var actives = this.typesContainer.querySelectorAll('[data-active="true"]');
+
+      if (actives !== null && actives.length !== 0) {
+        document.body.querySelectorAll('[data-event]').forEach(function (v) {
+          return addClass(v, 'hidden');
+        });
+        actives.forEach(function (t) {
+          var typeName = t.getAttribute('data-type');
+          var events = document.body.querySelectorAll("[data-event-type=\"".concat(typeName, "\"]"));
+          events.forEach(function (v) {
+            return removeClass(v, 'hidden');
+          });
+        });
+      } else {
+        document.body.querySelectorAll('[data-event]').forEach(function (v) {
+          return removeClass(v, 'hidden');
+        });
+      }
     }
     /**
      * Return the event of the list for given id
@@ -755,19 +804,25 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "showEvents",
     value: function showEvents(events) {
-      var _this6 = this;
+      var _this7 = this;
 
-      if (events === null || events.length === 0) {
+      if (events === null) {
         throw new Error('Invalid events source');
       }
 
       this.events = {};
-      events.forEach(function (e) {
-        e.applied && _this6.user.applyForEvent(e.id);
-        _this6.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
+      this.container.innerHTML = '';
+      this.containerHighlight.innerHTML = '';
 
-        _this6.renderEvent(e.id);
-      });
+      if (events.length) {
+        events.forEach(function (e) {
+          e.applied && _this7.user.applyForEvent(e.id);
+          _this7.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
+
+          _this7.renderEvent(e.id);
+        });
+      } else {// TODO: show an empty-state message
+      }
     }
     /**
      * Show the given event
@@ -851,13 +906,13 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "disableEventApplying",
     value: function disableEventApplying(event) {
-      var _this7 = this;
+      var _this8 = this;
 
       var eventView = document.querySelectorAll("[data-event-id=\"".concat(event.id, "\"]"));
 
       if (eventView !== null && eventView.length !== 0) {
         eventView.forEach(function (v) {
-          return _this7.disableEventApplyButton(v);
+          return _this8.disableEventApplyButton(v);
         });
       }
     }
@@ -928,6 +983,7 @@ var VanHack = /*#__PURE__*/function () {
         }
       });
       setProperty(view, 'data-event-id', event.id);
+      setProperty(view, 'data-event-type', event.type);
     }
     /**
      * Renders multiple properties of the event
@@ -1136,7 +1192,7 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "bindEventEvents",
     value: function bindEventEvents(e, v) {
-      var _this8 = this;
+      var _this9 = this;
 
       var actionView = v.querySelectorAll('[data-action="view"]');
       var actionApply = v.querySelectorAll('[data-action="apply"]');
@@ -1144,7 +1200,7 @@ var VanHack = /*#__PURE__*/function () {
       if (actionView !== null && actionView.length !== 0) {
         actionView.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this8.onViewHandler(e.id);
+            return _this9.onViewHandler(e.id);
           });
         });
       }
@@ -1152,7 +1208,7 @@ var VanHack = /*#__PURE__*/function () {
       if (actionApply !== null && actionApply.length !== 0) {
         actionApply.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this8.onApplyHandler(e.id);
+            return _this9.onApplyHandler(e.id);
           });
         });
       }

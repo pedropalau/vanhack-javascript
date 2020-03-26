@@ -95,7 +95,7 @@ const addClass = (el, className) => {
     }
 
     className.forEach(c => {
-        if (classExists(el, c) === false) {
+        if (hasClass(el, c) === false) {
             el.className += ` ${c}`
         }
     })
@@ -108,7 +108,7 @@ const addClass = (el, className) => {
  * @param {string} className 
  */
 const removeClass = (el, className) => {
-    if (classExists(el, className)) {
+    if (hasClass(el, className)) {
         el.className = Array.prototype.slice.call(el.classList)
             .filter(c => c !== className)
             .join(' ')
@@ -121,7 +121,7 @@ const removeClass = (el, className) => {
  * @param {object} el 
  * @param {string} className 
  */
-const classExists = (el, className) => Array.prototype.slice.call(el.classList).includes(className)
+const hasClass = (el, className) => Array.prototype.slice.call(el.classList).includes(className)
 
 /**
  * Adds a property=value to the given element
@@ -373,7 +373,6 @@ class VanHack {
      * @param {User} user 
      */
     constructor(user) {
-        this.loader = new Loader()
         this.renderer = renderer
         this.selector = '[data-role="events"]'
         this.selectorHighlight = '[data-role="events-highlight"]'
@@ -384,16 +383,7 @@ class VanHack {
         this.user = user
     }
 
-    showLoader() {
-        this.loader.show(this.selector)
-    }
-
-    hideLoader() {
-        this.loader.hide()
-    }
-
     load() {
-        this.showLoader()
         this.loadEventsTypes()
     }
 
@@ -412,7 +402,6 @@ class VanHack {
         get(EVENTS_API_ENDPOINT)
             .then(events => {
                 this.showEvents(events)
-                this.hideLoader()
             })
     }
 
@@ -436,10 +425,12 @@ class VanHack {
     showTypes(types) {
         this.types = types
 
+        this.typesContainer.innerHTML = ''
+
         Object.keys(this.types).forEach(k => {
             const type = this.types[k]
 
-            const typeHtml = this.renderType(type)
+            const typeHtml = this.renderType(k, type)
 
             this.typesContainer.appendChild(typeHtml)
         })
@@ -448,9 +439,10 @@ class VanHack {
     /**
      * Render the html for the custom type
      * 
-     * @param {object} type 
+     * @param {string} name The name (slug) of the category
+     * @param {object} type The object information of the category
      */
-    renderType(type) {
+    renderType(name, type) {
         const typeHtml = this.renderer.getTemplate('eventType')
 
         typeHtml.innerHTML = type.name
@@ -462,7 +454,59 @@ class VanHack {
         addClass(typeHtml, `hover:bg-${type.colors.secondary}`)
         addClass(typeHtml, `hover:text-${type.colors.primary}`)
 
+        setProperty(typeHtml, 'data-type', name)
+
+        typeHtml.addEventListener('click', () => this.filterByType(name))
+
         return typeHtml
+    }
+
+    /**
+     * Handler to filter events by type
+     * @param {string} name The category name (slug)
+     */
+    filterByType(name) {
+        const type = this.types[name]
+        const typeHtml = this.typesContainer.querySelector(`[data-type="${name}"]`)
+
+        if (hasClass(typeHtml, 'active') === false) {
+            removeClass(typeHtml, `text-${type.colors.secondary}`)
+            removeClass(typeHtml, `bg-${type.colors.primary}`)
+
+            addClass(typeHtml, `text-${type.colors.primary}`)
+            addClass(typeHtml, `bg-${type.colors.secondary}`)
+
+            addClass(typeHtml, 'active')
+            setProperty(typeHtml, 'data-active', true)
+        } else {
+            addClass(typeHtml, `text-${type.colors.secondary}`)
+            addClass(typeHtml, `bg-${type.colors.primary}`)
+
+            removeClass(typeHtml, `text-${type.colors.primary}`)
+            removeClass(typeHtml, `bg-${type.colors.secondary}`)
+
+            removeClass(typeHtml, 'active')
+            removeProperty(typeHtml, 'data-active', true)
+        }
+
+        this.filterEvents()
+    }
+
+    /**
+     * Filter events by selected types
+     */
+    filterEvents() {
+        const actives = this.typesContainer.querySelectorAll('[data-active="true"]')
+        if (actives !== null && actives.length !== 0) {
+            document.body.querySelectorAll('[data-event]').forEach(v => addClass(v, 'hidden'))
+            actives.forEach(t => {
+                const typeName = t.getAttribute('data-type')
+                const events = document.body.querySelectorAll(`[data-event-type="${typeName}"]`)
+                events.forEach(v => removeClass(v, 'hidden'))
+            })
+        } else {
+            document.body.querySelectorAll('[data-event]').forEach(v => removeClass(v, 'hidden'))
+        }
     }
 
     /**
@@ -482,17 +526,24 @@ class VanHack {
      * @param {array} events 
      */
     showEvents(events) {
-        if (events === null || events.length === 0) {
+        if (events === null) {
             throw new Error('Invalid events source')
         }
 
         this.events = {}
+
+        this.container.innerHTML = ''
+        this.containerHighlight.innerHTML = ''
        
-        events.forEach(e => {
-            e.applied && this.user.applyForEvent(e.id)
-            this.events[e.id] = new Event(...objToArray(e))
-            this.renderEvent(e.id)
-        })
+        if (events.length) {
+            events.forEach(e => {
+                e.applied && this.user.applyForEvent(e.id)
+                this.events[e.id] = new Event(...objToArray(e))
+                this.renderEvent(e.id)
+            })
+        } else {
+            // TODO: show an empty-state message
+        }
     }
 
     /**
@@ -627,6 +678,7 @@ class VanHack {
         })
 
         setProperty(view, 'data-event-id', event.id)
+        setProperty(view, 'data-event-type', event.type)
     }
 
     /**

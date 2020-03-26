@@ -81,17 +81,11 @@ body {
  * Content
  * ---------------------------------------------------------------------------- */
 @media (min-width: 767px) {
-    [data-role="events"] {
-        min-height: 20rem;
-    }
-
+    [data-role="events-highlight"] .spinner,
     [data-role="events"] .spinner {
-        height: 100%;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        margin-top: -20px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
         width: 100%;
     }
 
