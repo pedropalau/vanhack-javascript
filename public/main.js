@@ -142,6 +142,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  */
 var API_ENDPOINT = 'https://vanhack-events.now.sh';
 var EVENTS_API_ENDPOINT = "".concat(API_ENDPOINT, "/events");
+var SCREEN_SIZE_MD = 768;
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
  * for example to work with XMLHttpRequest.
@@ -912,11 +913,122 @@ var VanHack = /*#__PURE__*/function () {
 
   return VanHack;
 }();
+/**---------------------------------------------------------------
+ * Dropdown utilities
+ * --------------------------------------------------------------- */
+
+
+var dropdownElements = [];
+var dropdownObjects = [];
+
+var hasDropdown = function hasDropdown(el) {
+  return indexForDropdown(el) !== -1;
+};
+
+var indexForDropdown = function indexForDropdown(el) {
+  return dropdownElements.findIndex(function (currentEl) {
+    return currentEl === el;
+  });
+};
+
+var getDropdownFor = function getDropdownFor(el) {
+  if (hasDropdown(el)) {
+    return dropdownElements[indexForDropdown(el)];
+  }
+};
+
+var registerDropdown = function registerDropdown(el, d) {
+  if (hasDropdown(el) === false) {
+    dropdownElements.push(el);
+    dropdownObjects.push(d);
+  }
+};
+
+var removeDropdown = function removeDropdown(el) {
+  if (hasDropdown(el) === true) {
+    var i = indexForDropdown(el);
+    dropdownElements.splice(i, 1);
+    dropdownObjects.splice(i, 1);
+  }
+};
+
+var Dropdown = /*#__PURE__*/function () {
+  function Dropdown(el) {
+    _classCallCheck(this, Dropdown);
+
+    this.el = el;
+    this.toggle = this.el.querySelector('[data-role="dropdown-toggle"]');
+    this.menu = this.el.querySelector('[data-role="dropdown-menu"]');
+  }
+
+  _createClass(Dropdown, [{
+    key: "show",
+    value: function show() {
+      setProperty(this.toggle, 'aria-expanded', 'true');
+      removeClass(this.menu, 'md:hidden');
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      setProperty(this.toggle, 'aria-expanded', 'false');
+      addClass(this.menu, 'md:hidden');
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      console.log('destroy');
+    }
+  }], [{
+    key: "initAll",
+    value: function initAll() {
+      if (window.screen.width >= SCREEN_SIZE_MD) {
+        document.querySelectorAll('[data-role="dropdown"]').forEach(function (el) {
+          return Dropdown.init(el);
+        });
+      }
+    }
+  }, {
+    key: "init",
+    value: function init(el) {
+      if (hasDropdown(el) === false) {
+        var d = new Dropdown(el);
+        el.addEventListener('mouseenter', function () {
+          return d.show();
+        });
+        el.addEventListener('mouseleave', function () {
+          return d.hide();
+        });
+        registerDropdown(el, d);
+      }
+    }
+  }, {
+    key: "refresh",
+    value: function refresh() {
+      document.querySelectorAll('[data-toggle="dropdown"]').forEach(function (el) {
+        if (window.screen.width < SCREEN_SIZE_MD) {
+          el.removeEventListener('mouseenter');
+          el.removeEventListener('mouseleave');
+
+          if (hasDropdown(el) === true) {
+            getDropdownFor(el).destroy();
+            removeDropdown(el);
+          }
+        }
+      });
+    }
+  }]);
+
+  return Dropdown;
+}();
 
 var u = new User(1, "vanhack");
 var v = new VanHack(u);
 document.addEventListener('DOMContentLoaded', function () {
+  Dropdown.initAll();
   v.load();
+});
+window.addEventListener('rezie', function () {
+  Dropdown.refresh();
 });
 
 /***/ }),

@@ -7,7 +7,10 @@
  */
 
 const API_ENDPOINT = 'https://vanhack-events.now.sh'
+
 const EVENTS_API_ENDPOINT = `${API_ENDPOINT}/events`
+
+const SCREEN_SIZE_MD = 768
 
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
@@ -604,9 +607,100 @@ class VanHack {
     }
 }
 
+/**---------------------------------------------------------------
+ * Dropdown utilities
+ * --------------------------------------------------------------- */
+
+const dropdownElements = []
+const dropdownObjects = []
+
+const hasDropdown = el => indexForDropdown(el) !== -1
+
+const indexForDropdown = el => dropdownElements.findIndex(currentEl => currentEl === el)
+
+const getDropdownFor = el => {
+    if (hasDropdown(el)) {
+        return dropdownElements[indexForDropdown(el)]
+    }
+}
+
+const registerDropdown = (el, d) => {
+    if (hasDropdown(el) === false) {
+        dropdownElements.push(el)
+        dropdownObjects.push(d)
+    }
+}
+
+const removeDropdown = el => {
+    if (hasDropdown(el) === true) {
+        const i = indexForDropdown(el)
+        dropdownElements.splice(i, 1)
+        dropdownObjects.splice(i, 1)
+    }
+}
+
+class Dropdown {
+    constructor(el) {
+        this.el = el
+        this.toggle = this.el.querySelector('[data-role="dropdown-toggle"]')
+        this.menu = this.el.querySelector('[data-role="dropdown-menu"]')
+    }
+
+    show() {
+        setProperty(this.toggle, 'aria-expanded', 'true')
+        removeClass(this.menu, 'md:hidden')
+    }
+
+    hide() {
+        setProperty(this.toggle, 'aria-expanded', 'false')
+        addClass(this.menu, 'md:hidden')
+    }
+
+    destroy() {
+        console.log('destroy')
+    }
+
+    static initAll() {
+        if (window.screen.width >= SCREEN_SIZE_MD) {
+            document.querySelectorAll('[data-role="dropdown"]').forEach(el => Dropdown.init(el))   
+        }
+    }
+
+    static init(el) {
+        if (hasDropdown(el) === false) {
+            const d = new Dropdown(el)
+
+            el.addEventListener('mouseenter', () => d.show())
+            el.addEventListener('mouseleave', () => d.hide())
+
+            registerDropdown(el, d)
+        }
+    }
+
+    static refresh() {
+        document.querySelectorAll('[data-toggle="dropdown"]').forEach(el => {
+            if (window.screen.width < SCREEN_SIZE_MD) {
+                el.removeEventListener('mouseenter')
+                el.removeEventListener('mouseleave')
+
+                if (hasDropdown(el) === true) {
+                    getDropdownFor(el).destroy()
+                    removeDropdown(el)
+                }
+            }
+        })
+    }
+}
+
 const u = new User(1, "vanhack")
 const v = new VanHack(u)
 
-document.addEventListener('DOMContentLoaded', () => {    
+document.addEventListener('DOMContentLoaded', () => {
+    Dropdown.initAll()
+
     v.load()
+})
+
+window.addEventListener('rezie', () => {
+    Dropdown.refresh()
 })
