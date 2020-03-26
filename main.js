@@ -117,7 +117,7 @@ const classExists = (el, className) => Array.prototype.slice.call(el.classList).
  * @param {string} prop 
  * @param {bool|string} value 
  */
-const addProperty = (el, prop, value) => el.setAttribute(prop, value)
+const setProperty = (el, prop, value) => el.setAttribute(prop, value)
 
 /**
  * Removes a property from the given element
@@ -461,7 +461,7 @@ class VanHack {
         const applyButton = v.querySelector('[data-action="apply"]')
         if (applyButton !== null) {
             addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none')
-            addProperty(applyButton, 'disabled', true)
+            setProperty(applyButton, 'disabled', true)
         }
     }
 
@@ -489,7 +489,7 @@ class VanHack {
         Object.keys(event).forEach(k => {
             const e = view.querySelector(`[data-render-prop="${k}"]`)
             if (`render${ucfirst(k)}` in self) {
-                const r = self[`render${ucfirst(k)}`](event, view)
+                const r = self[`render${ucfirst(k)}`](event, view, e)
                 if (r && e !== null) {
                     e.innerHTML = r
                 }
@@ -519,6 +519,12 @@ class VanHack {
 
     renderTitle(e) {
         return e.title
+    }
+
+    renderThumbnail(e, v, el) {
+        if (el !== null) {
+            setProperty(el, 'src', e.thumbnail)
+        }
     }
 
     renderContent(e) {
@@ -555,7 +561,7 @@ class VanHack {
 
         const dateHtml = v.querySelector('[data-prop="date"]')
         if (dateHtml !== null) {
-            dateHtml.innerHTML = `This event will take between ${formatDate(startDate, startFormat)} and ${formatDate(endDate, endFormat)}`
+            dateHtml.innerHTML = `This event will take place between ${formatDate(startDate, startFormat)} and ${formatDate(endDate, endFormat)}`
         }
     }
 

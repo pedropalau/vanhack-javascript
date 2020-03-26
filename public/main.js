@@ -303,7 +303,7 @@ var classExists = function classExists(el, className) {
  */
 
 
-var addProperty = function addProperty(el, prop, value) {
+var setProperty = function setProperty(el, prop, value) {
   return el.setAttribute(prop, value);
 };
 /**
@@ -740,7 +740,7 @@ var VanHack = /*#__PURE__*/function () {
 
       if (applyButton !== null) {
         addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none');
-        addProperty(applyButton, 'disabled', true);
+        setProperty(applyButton, 'disabled', true);
       }
     }
     /**
@@ -767,7 +767,7 @@ var VanHack = /*#__PURE__*/function () {
         var e = view.querySelector("[data-render-prop=\"".concat(k, "\"]"));
 
         if ("render".concat(ucfirst(k)) in self) {
-          var r = self["render".concat(ucfirst(k))](event, view);
+          var r = self["render".concat(ucfirst(k))](event, view, e);
 
           if (r && e !== null) {
             e.innerHTML = r;
@@ -803,6 +803,13 @@ var VanHack = /*#__PURE__*/function () {
     key: "renderTitle",
     value: function renderTitle(e) {
       return e.title;
+    }
+  }, {
+    key: "renderThumbnail",
+    value: function renderThumbnail(e, v, el) {
+      if (el !== null) {
+        setProperty(el, 'src', e.thumbnail);
+      }
     }
   }, {
     key: "renderContent",
@@ -843,7 +850,7 @@ var VanHack = /*#__PURE__*/function () {
       var dateHtml = v.querySelector('[data-prop="date"]');
 
       if (dateHtml !== null) {
-        dateHtml.innerHTML = "This event will take between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
+        dateHtml.innerHTML = "This event will take place between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
       }
     }
   }, {
