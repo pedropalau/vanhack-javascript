@@ -581,15 +581,15 @@ class VanHack {
     }
 
     bindEvents(id, v) {
-        const actionView = v.querySelector('[data-action="view"]')
-        const actionApply = v.querySelector('[data-action="apply"]')
+        const actionView = v.querySelectorAll('[data-action="view"]')
+        const actionApply = v.querySelectorAll('[data-action="apply"]')
 
-        if (actionView !== null) {
-            actionView.addEventListener('click', () => this.onViewHandler(id))
+        if (actionView !== null && actionView.length !== 0) {
+            actionView.forEach(a => a.addEventListener('click', () => this.onViewHandler(id)))
         }
 
-        if (actionApply !== null) {
-            actionApply.addEventListener('click', () => this.onApplyHandler(id))
+        if (actionApply !== null && actionApply.length !== 0) {
+            actionApply.forEach(a => a.addEventListener('click', () => this.onApplyHandler(id)))
         }
     }
 

@@ -877,18 +877,22 @@ var VanHack = /*#__PURE__*/function () {
     value: function bindEvents(id, v) {
       var _this6 = this;
 
-      var actionView = v.querySelector('[data-action="view"]');
-      var actionApply = v.querySelector('[data-action="apply"]');
+      var actionView = v.querySelectorAll('[data-action="view"]');
+      var actionApply = v.querySelectorAll('[data-action="apply"]');
 
-      if (actionView !== null) {
-        actionView.addEventListener('click', function () {
-          return _this6.onViewHandler(id);
+      if (actionView !== null && actionView.length !== 0) {
+        actionView.forEach(function (a) {
+          return a.addEventListener('click', function () {
+            return _this6.onViewHandler(id);
+          });
         });
       }
 
-      if (actionApply !== null) {
-        actionApply.addEventListener('click', function () {
-          return _this6.onApplyHandler(id);
+      if (actionApply !== null && actionApply.length !== 0) {
+        actionApply.forEach(function (a) {
+          return a.addEventListener('click', function () {
+            return _this6.onApplyHandler(id);
+          });
         });
       }
     }
