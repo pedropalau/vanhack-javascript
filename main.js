@@ -10,6 +10,8 @@ const API_ENDPOINT = 'https://vanhack-events.now.sh'
 
 const EVENTS_API_ENDPOINT = `${API_ENDPOINT}/events`
 
+const EVENTS_TYPES_API_ENDPOINT = `${API_ENDPOINT}/types`
+
 const SCREEN_SIZE_MD = 768
 
 /**---------------------------------------------------------------
@@ -271,6 +273,9 @@ class Modal {
 
         removeClass(this.el, 'hidden')
         this.wrapper.appendChild(this.el)
+
+        addClass(document.body, 'overflow-hidden')
+
         this.isShown = true
     }
 
@@ -291,6 +296,7 @@ class Modal {
 
     destroy() {
         this.wrapper.removeChild(this.el)
+        removeClass(document.body, 'overflow-hidden')
     }
 
     bindEvents() {
@@ -355,7 +361,9 @@ class VanHack {
         this.loader = new Loader()
         this.renderer = renderer
         this.selector = '[data-role="events"]'
+        this.typeSelector = '[data-role="event-types"]'
         this.container = this.renderer.getElement(this.selector, false)
+        this.typesContainer = this.renderer.getElement(this.typeSelector, false)
         this.user = user
     }
 
@@ -369,15 +377,65 @@ class VanHack {
 
     load() {
         this.showLoader()
-        this.loadEvents()
+        this.loadEventsTypes()
+    }
+
+    loadEventsTypes() {
+        get(EVENTS_TYPES_API_ENDPOINT)
+            .then(types => {
+                if (types === null || types.length === 0) {
+                    throw new Error('Invalid events types source')
+                }
+                this.showTypes(types)
+                this.loadEvents()
+            })
     }
 
     loadEvents() {
         get(EVENTS_API_ENDPOINT)
-            .then((events) => {
+            .then(events => {
                 this.showEvents(events)
                 this.hideLoader()
             })
+    }
+
+    getTypeBySlug(slug) {
+        if ((slug in this.types) === false) {
+            return null
+        }
+        return this.types[slug]
+    }
+
+    showTypes(types) {
+        this.types = types
+
+        Object.keys(this.types).forEach(k => {
+            const type = this.types[k]
+
+            const typeHtml = this.renderType(type)
+
+            this.typesContainer.appendChild(typeHtml)
+        })
+    }
+
+    /**
+     * Render the html for the custom type
+     * 
+     * @param {object} type 
+     */
+    renderType(type) {
+        const typeHtml = this.renderer.getTemplate('eventType')
+
+        typeHtml.innerHTML = type.name
+
+        addClass(typeHtml, `bg-${type.colors.primary}`)
+        addClass(typeHtml, `border-${type.colors.secondary}`)
+        addClass(typeHtml, `text-${type.colors.secondary}`)
+
+        addClass(typeHtml, `hover:bg-${type.colors.secondary}`)
+        addClass(typeHtml, `hover:text-${type.colors.primary}`)
+
+        return typeHtml
     }
 
     /**
@@ -425,7 +483,7 @@ class VanHack {
             this.disableEventApplyButton(view)
         }
 
-        this.bindEvents(event.id, view)
+        this.bindEventEvents(event.id, view)
 
         modal.setContent(view)
         modal.show()
@@ -461,10 +519,12 @@ class VanHack {
      * @param {object} v 
      */
     disableEventApplyButton(v) {
-        const applyButton = v.querySelector('[data-action="apply"]')
-        if (applyButton !== null) {
-            addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none')
-            setProperty(applyButton, 'disabled', true)
+        const applyButton = v.querySelectorAll('[data-action="apply"]')
+        if (applyButton !== null && applyButton.length !== 0) {
+            applyButton.forEach(b => {
+                addClass(b, 'opacity-50 cursor-not-allowed pointer-events-none')
+                setProperty(b, 'disabled', true)
+            })
         }
     }
 
@@ -479,7 +539,7 @@ class VanHack {
         
         this.renderEventProps(event, block)
 
-        this.bindEvents(id, block)
+        this.bindEventEvents(id, block)
 
         event.applied && this.disableEventApplyButton(block)
 
@@ -491,8 +551,8 @@ class VanHack {
 
         Object.keys(event).forEach(k => {
             const e = view.querySelector(`[data-render-prop="${k}"]`)
-            if (`render${ucfirst(k)}` in self) {
-                const r = self[`render${ucfirst(k)}`](event, view, e)
+            if (`renderEvent${ucfirst(k)}` in self) {
+                const r = self[`renderEvent${ucfirst(k)}`](event, view, e)
                 if (r && e !== null) {
                     e.innerHTML = r
                 }
@@ -501,10 +561,10 @@ class VanHack {
             }            
         })
 
-        view.setAttribute('data-event-id', event.id)
+        setProperty(view, 'data-event-id', event.id)
     }
 
-    renderId(e, v) {
+    renderEventId(e, v) {
         const startMonthHtml = v.querySelector('[data-prop="start-month"]')
         const startDayHtml = v.querySelector('[data-prop="start-day"]')
 
@@ -516,25 +576,25 @@ class VanHack {
             startDayHtml.innerHTML = formatDate(new Date(e.start), {day: '2-digit'})
         }        
 
-        this.renderCategory(e, v)
-        this.renderDateInfo(e, v)
+        this.renderEventCategory(e, v)
+        this.renderEventDateInfo(e, v)
     }
 
-    renderTitle(e) {
+    renderEventTitle(e) {
         return e.title
     }
 
-    renderThumbnail(e, v, el) {
+    renderEventThumbnail(e, v, el) {
         if (el !== null) {
             setProperty(el, 'src', e.thumbnail)
         }
     }
 
-    renderContent(e) {
+    renderEventContent(e) {
         return e.description
     }
 
-    renderDateInfo(e, v) {
+    renderEventDateInfo(e, v) {
         const startDate = new Date(e.start)
         const endDate = new Date(e.end)
         const currentDate = new Date()
@@ -568,22 +628,31 @@ class VanHack {
         }
     }
 
-    renderCategory(e, v) {
+    renderEventCategory(e, v) {
         const categoryHtml = v.querySelector('[data-prop="category"]')
         if (categoryHtml !== null) {
-            categoryHtml.innerHTML = 'Webinar'
+            const type = this.getTypeBySlug(e.type)
+            if (type) {
+                categoryHtml.innerHTML = type.name
+
+                setProperty(v, 'data-event-type', e.type)
+
+                addClass(categoryHtml, `bg-${type.colors.primary}`)
+                addClass(categoryHtml, `border-${type.colors.secondary}`)
+                addClass(categoryHtml, `text-${type.colors.secondary}`)
+            }
         }
     }
 
-    renderLocation(e) {
+    renderEventLocation(e) {
         return `${e.location.city}, ${e.location.country}`
     }
 
-    renderDeadline(e) {
+    renderEventDeadline(e) {
         return formatDate(new Date(e.deadline))
     }
 
-    bindEvents(id, v) {
+    bindEventEvents(id, v) {
         const actionView = v.querySelectorAll('[data-action="view"]')
         const actionApply = v.querySelectorAll('[data-action="apply"]')
 

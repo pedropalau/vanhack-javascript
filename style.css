@@ -130,10 +130,12 @@ body {
     width: 0.75rem;
 }
 
-.event-details__body {
-    height: 86%;
-}
+@media (min-width: 768px) {
+    .event-details__body {
+        height: 86%;
+    }
 
-.event-details .event-details__actions {
-    height: 14%;
+    .event-details .event-details__actions {
+        height: 14%;
+    }
 }

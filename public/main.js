@@ -142,6 +142,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  */
 var API_ENDPOINT = 'https://vanhack-events.now.sh';
 var EVENTS_API_ENDPOINT = "".concat(API_ENDPOINT, "/events");
+var EVENTS_TYPES_API_ENDPOINT = "".concat(API_ENDPOINT, "/types");
 var SCREEN_SIZE_MD = 768;
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
@@ -494,6 +495,7 @@ var Modal = /*#__PURE__*/function () {
 
       removeClass(this.el, 'hidden');
       this.wrapper.appendChild(this.el);
+      addClass(document.body, 'overflow-hidden');
       this.isShown = true;
     }
   }, {
@@ -516,6 +518,7 @@ var Modal = /*#__PURE__*/function () {
     key: "destroy",
     value: function destroy() {
       this.wrapper.removeChild(this.el);
+      removeClass(document.body, 'overflow-hidden');
     }
   }, {
     key: "bindEvents",
@@ -606,7 +609,9 @@ var VanHack = /*#__PURE__*/function () {
     this.loader = new Loader();
     this.renderer = renderer;
     this.selector = '[data-role="events"]';
+    this.typeSelector = '[data-role="event-types"]';
     this.container = this.renderer.getElement(this.selector, false);
+    this.typesContainer = this.renderer.getElement(this.typeSelector, false);
     this.user = user;
   }
 
@@ -624,18 +629,74 @@ var VanHack = /*#__PURE__*/function () {
     key: "load",
     value: function load() {
       this.showLoader();
-      this.loadEvents();
+      this.loadEventsTypes();
+    }
+  }, {
+    key: "loadEventsTypes",
+    value: function loadEventsTypes() {
+      var _this3 = this;
+
+      get(EVENTS_TYPES_API_ENDPOINT).then(function (types) {
+        if (types === null || types.length === 0) {
+          throw new Error('Invalid events types source');
+        }
+
+        _this3.showTypes(types);
+
+        _this3.loadEvents();
+      });
     }
   }, {
     key: "loadEvents",
     value: function loadEvents() {
-      var _this3 = this;
+      var _this4 = this;
 
       get(EVENTS_API_ENDPOINT).then(function (events) {
-        _this3.showEvents(events);
+        _this4.showEvents(events);
 
-        _this3.hideLoader();
+        _this4.hideLoader();
       });
+    }
+  }, {
+    key: "getTypeBySlug",
+    value: function getTypeBySlug(slug) {
+      if (slug in this.types === false) {
+        return null;
+      }
+
+      return this.types[slug];
+    }
+  }, {
+    key: "showTypes",
+    value: function showTypes(types) {
+      var _this5 = this;
+
+      this.types = types;
+      Object.keys(this.types).forEach(function (k) {
+        var type = _this5.types[k];
+
+        var typeHtml = _this5.renderType(type);
+
+        _this5.typesContainer.appendChild(typeHtml);
+      });
+    }
+    /**
+     * Render the html for the custom type
+     * 
+     * @param {object} type 
+     */
+
+  }, {
+    key: "renderType",
+    value: function renderType(type) {
+      var typeHtml = this.renderer.getTemplate('eventType');
+      typeHtml.innerHTML = type.name;
+      addClass(typeHtml, "bg-".concat(type.colors.primary));
+      addClass(typeHtml, "border-".concat(type.colors.secondary));
+      addClass(typeHtml, "text-".concat(type.colors.secondary));
+      addClass(typeHtml, "hover:bg-".concat(type.colors.secondary));
+      addClass(typeHtml, "hover:text-".concat(type.colors.primary));
+      return typeHtml;
     }
     /**
      * Return the event of the list for given id
@@ -660,7 +721,7 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "showEvents",
     value: function showEvents(events) {
-      var _this4 = this;
+      var _this6 = this;
 
       if (events === null || events.length === 0) {
         throw new Error('Invalid events source');
@@ -668,10 +729,10 @@ var VanHack = /*#__PURE__*/function () {
 
       this.events = {};
       events.forEach(function (e) {
-        e.applied && _this4.user.applyForEvent(e.id);
-        _this4.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
+        e.applied && _this6.user.applyForEvent(e.id);
+        _this6.events[e.id] = _construct(Event, _toConsumableArray(objToArray(e)));
 
-        _this4.renderEvent(e.id);
+        _this6.renderEvent(e.id);
       });
     }
     /**
@@ -691,7 +752,7 @@ var VanHack = /*#__PURE__*/function () {
         this.disableEventApplyButton(view);
       }
 
-      this.bindEvents(event.id, view);
+      this.bindEventEvents(event.id, view);
       modal.setContent(view);
       modal.show();
     }
@@ -718,13 +779,13 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "disableEventApplying",
     value: function disableEventApplying(event) {
-      var _this5 = this;
+      var _this7 = this;
 
       var eventView = document.querySelectorAll("[data-event-id=\"".concat(event.id, "\"]"));
 
       if (eventView !== null && eventView.length !== 0) {
         eventView.forEach(function (v) {
-          return _this5.disableEventApplyButton(v);
+          return _this7.disableEventApplyButton(v);
         });
       }
     }
@@ -737,11 +798,13 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "disableEventApplyButton",
     value: function disableEventApplyButton(v) {
-      var applyButton = v.querySelector('[data-action="apply"]');
+      var applyButton = v.querySelectorAll('[data-action="apply"]');
 
-      if (applyButton !== null) {
-        addClass(applyButton, 'opacity-50 cursor-not-allowed pointer-events-none');
-        setProperty(applyButton, 'disabled', true);
+      if (applyButton !== null && applyButton.length !== 0) {
+        applyButton.forEach(function (b) {
+          addClass(b, 'opacity-50 cursor-not-allowed pointer-events-none');
+          setProperty(b, 'disabled', true);
+        });
       }
     }
     /**
@@ -756,7 +819,7 @@ var VanHack = /*#__PURE__*/function () {
       var block = this.renderer.getTemplate('eventBlock');
       var event = this.getEvent(id);
       this.renderEventProps(event, block);
-      this.bindEvents(id, block);
+      this.bindEventEvents(id, block);
       event.applied && this.disableEventApplyButton(block);
       this.container.appendChild(block);
     }
@@ -767,8 +830,8 @@ var VanHack = /*#__PURE__*/function () {
       Object.keys(event).forEach(function (k) {
         var e = view.querySelector("[data-render-prop=\"".concat(k, "\"]"));
 
-        if ("render".concat(ucfirst(k)) in self) {
-          var r = self["render".concat(ucfirst(k))](event, view, e);
+        if ("renderEvent".concat(ucfirst(k)) in self) {
+          var r = self["renderEvent".concat(ucfirst(k))](event, view, e);
 
           if (r && e !== null) {
             e.innerHTML = r;
@@ -777,11 +840,11 @@ var VanHack = /*#__PURE__*/function () {
           e.innerHTML = event[k];
         }
       });
-      view.setAttribute('data-event-id', event.id);
+      setProperty(view, 'data-event-id', event.id);
     }
   }, {
-    key: "renderId",
-    value: function renderId(e, v) {
+    key: "renderEventId",
+    value: function renderEventId(e, v) {
       var startMonthHtml = v.querySelector('[data-prop="start-month"]');
       var startDayHtml = v.querySelector('[data-prop="start-day"]');
 
@@ -797,29 +860,29 @@ var VanHack = /*#__PURE__*/function () {
         });
       }
 
-      this.renderCategory(e, v);
-      this.renderDateInfo(e, v);
+      this.renderEventCategory(e, v);
+      this.renderEventDateInfo(e, v);
     }
   }, {
-    key: "renderTitle",
-    value: function renderTitle(e) {
+    key: "renderEventTitle",
+    value: function renderEventTitle(e) {
       return e.title;
     }
   }, {
-    key: "renderThumbnail",
-    value: function renderThumbnail(e, v, el) {
+    key: "renderEventThumbnail",
+    value: function renderEventThumbnail(e, v, el) {
       if (el !== null) {
         setProperty(el, 'src', e.thumbnail);
       }
     }
   }, {
-    key: "renderContent",
-    value: function renderContent(e) {
+    key: "renderEventContent",
+    value: function renderEventContent(e) {
       return e.description;
     }
   }, {
-    key: "renderDateInfo",
-    value: function renderDateInfo(e, v) {
+    key: "renderEventDateInfo",
+    value: function renderEventDateInfo(e, v) {
       var startDate = new Date(e.start);
       var endDate = new Date(e.end);
       var currentDate = new Date();
@@ -855,28 +918,36 @@ var VanHack = /*#__PURE__*/function () {
       }
     }
   }, {
-    key: "renderCategory",
-    value: function renderCategory(e, v) {
+    key: "renderEventCategory",
+    value: function renderEventCategory(e, v) {
       var categoryHtml = v.querySelector('[data-prop="category"]');
 
       if (categoryHtml !== null) {
-        categoryHtml.innerHTML = 'Webinar';
+        var type = this.getTypeBySlug(e.type);
+
+        if (type) {
+          categoryHtml.innerHTML = type.name;
+          setProperty(v, 'data-event-type', e.type);
+          addClass(categoryHtml, "bg-".concat(type.colors.primary));
+          addClass(categoryHtml, "border-".concat(type.colors.secondary));
+          addClass(categoryHtml, "text-".concat(type.colors.secondary));
+        }
       }
     }
   }, {
-    key: "renderLocation",
-    value: function renderLocation(e) {
+    key: "renderEventLocation",
+    value: function renderEventLocation(e) {
       return "".concat(e.location.city, ", ").concat(e.location.country);
     }
   }, {
-    key: "renderDeadline",
-    value: function renderDeadline(e) {
+    key: "renderEventDeadline",
+    value: function renderEventDeadline(e) {
       return formatDate(new Date(e.deadline));
     }
   }, {
-    key: "bindEvents",
-    value: function bindEvents(id, v) {
-      var _this6 = this;
+    key: "bindEventEvents",
+    value: function bindEventEvents(id, v) {
+      var _this8 = this;
 
       var actionView = v.querySelectorAll('[data-action="view"]');
       var actionApply = v.querySelectorAll('[data-action="apply"]');
@@ -884,7 +955,7 @@ var VanHack = /*#__PURE__*/function () {
       if (actionView !== null && actionView.length !== 0) {
         actionView.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this6.onViewHandler(id);
+            return _this8.onViewHandler(id);
           });
         });
       }
@@ -892,7 +963,7 @@ var VanHack = /*#__PURE__*/function () {
       if (actionApply !== null && actionApply.length !== 0) {
         actionApply.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this6.onApplyHandler(id);
+            return _this8.onApplyHandler(id);
           });
         });
       }
