@@ -664,6 +664,7 @@ class VanHack {
             applyButton.forEach(b => {
                 addClass(b, 'opacity-50 cursor-not-allowed pointer-events-none')
                 setProperty(b, 'disabled', true)
+                b.innerHTML = 'Applied'
             })
         }
     }
@@ -684,7 +685,11 @@ class VanHack {
 
         event.applied && this.disableEventApplyButton(block)
 
-        this.processPremiumEvent(event, block)
+        if (event.premium === true) {
+            addClass(block, 'border')
+            addClass(block, `border-${type.colors.secondary}`)
+            this.processPremiumEvent(event, block)
+        }
 
         if (type.highlight === true) {
             this.containerHighlight.appendChild(block)

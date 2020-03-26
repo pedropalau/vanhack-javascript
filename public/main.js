@@ -971,6 +971,7 @@ var VanHack = /*#__PURE__*/function () {
         applyButton.forEach(function (b) {
           addClass(b, 'opacity-50 cursor-not-allowed pointer-events-none');
           setProperty(b, 'disabled', true);
+          b.innerHTML = 'Applied';
         });
       }
     }
@@ -989,7 +990,12 @@ var VanHack = /*#__PURE__*/function () {
       this.renderEventProps(event, block);
       this.bindEventEvents(event, block);
       event.applied && this.disableEventApplyButton(block);
-      this.processPremiumEvent(event, block);
+
+      if (event.premium === true) {
+        addClass(block, 'border');
+        addClass(block, "border-".concat(type.colors.secondary));
+        this.processPremiumEvent(event, block);
+      }
 
       if (type.highlight === true) {
         this.containerHighlight.appendChild(block);
