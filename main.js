@@ -499,11 +499,16 @@ class VanHack {
         const actives = this.typesContainer.querySelectorAll('[data-active="true"]')
         if (actives !== null && actives.length !== 0) {
             document.body.querySelectorAll('[data-event]').forEach(v => addClass(v, 'hidden'))
+
+            this.hideEmptyState()
+
             actives.forEach(t => {
                 const typeName = t.getAttribute('data-type')
                 const events = document.body.querySelectorAll(`[data-event-type="${typeName}"]`)
                 events.forEach(v => removeClass(v, 'hidden'))
             })
+
+            this.showEmptyState()
         } else {
             document.body.querySelectorAll('[data-event]').forEach(v => removeClass(v, 'hidden'))
         }
@@ -542,7 +547,40 @@ class VanHack {
                 this.renderEvent(e.id)
             })
         } else {
-            // TODO: show an empty-state message
+            this.showEmptyState()
+        }
+    }
+
+    showEmptyState(container = null) {
+        const tmpl = this.renderer.getTemplate('eventsEmptyState')
+
+        if (container === null) {
+            if (this.events.length === 0 ||
+                this.container.querySelectorAll('[data-event]:not(.hidden)').length === 0) {
+                this.showEmptyState(this.container)
+            }
+    
+            if (this.events.length === 0 ||
+                this.containerHighlight.querySelectorAll('[data-event]:not(.hidden)').length === 0) {
+                this.showEmptyState(this.containerHighlight)
+            }
+
+            return
+        }
+
+        container.parentNode.appendChild(tmpl)
+    }
+
+    hideEmptyState(container = null) {
+        if (container === null) {
+            this.hideEmptyState(this.container)
+            this.hideEmptyState(this.containerHighlight)
+            return
+        }
+
+        const stateHtml = container.parentNode.querySelector('[data-role="empty-state"]')
+        if (stateHtml !== null) {
+            stateHtml.parentNode.removeChild(stateHtml)
         }
     }
 

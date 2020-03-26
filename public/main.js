@@ -768,6 +768,7 @@ var VanHack = /*#__PURE__*/function () {
         document.body.querySelectorAll('[data-event]').forEach(function (v) {
           return addClass(v, 'hidden');
         });
+        this.hideEmptyState();
         actives.forEach(function (t) {
           var typeName = t.getAttribute('data-type');
           var events = document.body.querySelectorAll("[data-event-type=\"".concat(typeName, "\"]"));
@@ -775,6 +776,7 @@ var VanHack = /*#__PURE__*/function () {
             return removeClass(v, 'hidden');
           });
         });
+        this.showEmptyState();
       } else {
         document.body.querySelectorAll('[data-event]').forEach(function (v) {
           return removeClass(v, 'hidden');
@@ -821,7 +823,45 @@ var VanHack = /*#__PURE__*/function () {
 
           _this7.renderEvent(e.id);
         });
-      } else {// TODO: show an empty-state message
+      } else {
+        this.showEmptyState();
+      }
+    }
+  }, {
+    key: "showEmptyState",
+    value: function showEmptyState() {
+      var container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var tmpl = this.renderer.getTemplate('eventsEmptyState');
+
+      if (container === null) {
+        if (this.events.length === 0 || this.container.querySelectorAll('[data-event]:not(.hidden)').length === 0) {
+          this.showEmptyState(this.container);
+        }
+
+        if (this.events.length === 0 || this.containerHighlight.querySelectorAll('[data-event]:not(.hidden)').length === 0) {
+          this.showEmptyState(this.containerHighlight);
+        }
+
+        return;
+      }
+
+      container.parentNode.appendChild(tmpl);
+    }
+  }, {
+    key: "hideEmptyState",
+    value: function hideEmptyState() {
+      var container = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (container === null) {
+        this.hideEmptyState(this.container);
+        this.hideEmptyState(this.containerHighlight);
+        return;
+      }
+
+      var stateHtml = container.parentNode.querySelector('[data-role="empty-state"]');
+
+      if (stateHtml !== null) {
+        stateHtml.parentNode.removeChild(stateHtml);
       }
     }
     /**
