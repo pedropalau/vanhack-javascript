@@ -7,10 +7,12 @@
  */
 
 const API_ENDPOINT = 'https://vanhack-events.now.sh'
-
 const EVENTS_API_ENDPOINT = `${API_ENDPOINT}/events`
-
 const EVENTS_TYPES_API_ENDPOINT = `${API_ENDPOINT}/types`
+
+const SOCIAL_SHARE_LINKEDIN = 'https://www.linkedin.com/shareArticle?mini=true&url=https://vanhack.com&title=[title]&summary=[summary]&source=VanHack'
+const SOCIAL_SHARE_FACEBOOK = 'https://www.facebook.com/sharer.php?u=https://vanhack.com&title=[title]&summary=[summary]'
+const SOCIAL_SHARE_TWITTER = 'https://twitter.com/intent/tweet?url=https://vanhack.com&text=[summary]&hashtags=vanhack'
 
 const SCREEN_SIZE_MD = 768
 
@@ -608,6 +610,7 @@ class VanHack {
 
         this.renderEventCategory(e, v)
         this.renderEventDateInfo(e, v)
+        this.renderEventSocial(e, v)
     }
 
     renderEventTitle(e) {
@@ -680,6 +683,31 @@ class VanHack {
 
     renderEventDeadline(e) {
         return formatDate(new Date(e.deadline))
+    }
+
+    renderEventSocial(e, v) {
+        const facebookShareHtml = v.querySelector('[data-share="facebook"]')
+        const linkedinShareHtml = v.querySelector('[data-share="linkedin"]')
+        const twitterShareHtml = v.querySelector('[data-share="twitter"]')
+
+        if (facebookShareHtml !== null) {
+            setProperty(facebookShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_FACEBOOK))
+        }
+
+        if (linkedinShareHtml !== null) {
+            setProperty(linkedinShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_LINKEDIN))
+        }
+
+        if (twitterShareHtml !== null) {
+            setProperty(twitterShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_TWITTER))
+        }
+    }
+
+    prepareSocialUrl(e, url) {
+        url = url.replace('[title]', e.title)
+        url = url.replace('[summary]', e.summary)
+
+        return url
     }
 
     bindEventEvents(id, v) {

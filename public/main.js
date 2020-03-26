@@ -143,6 +143,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var API_ENDPOINT = 'https://vanhack-events.now.sh';
 var EVENTS_API_ENDPOINT = "".concat(API_ENDPOINT, "/events");
 var EVENTS_TYPES_API_ENDPOINT = "".concat(API_ENDPOINT, "/types");
+var SOCIAL_SHARE_LINKEDIN = 'https://www.linkedin.com/shareArticle?mini=true&url=https://vanhack.com&title=[title]&summary=[summary]&source=VanHack';
+var SOCIAL_SHARE_FACEBOOK = 'https://www.facebook.com/sharer.php?u=https://vanhack.com&title=[title]&summary=[summary]';
+var SOCIAL_SHARE_TWITTER = 'https://twitter.com/intent/tweet?url=https://vanhack.com&text=[summary]&hashtags=vanhack';
 var SCREEN_SIZE_MD = 768;
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
@@ -908,6 +911,7 @@ var VanHack = /*#__PURE__*/function () {
 
       this.renderEventCategory(e, v);
       this.renderEventDateInfo(e, v);
+      this.renderEventSocial(e, v);
     }
   }, {
     key: "renderEventTitle",
@@ -989,6 +993,32 @@ var VanHack = /*#__PURE__*/function () {
     key: "renderEventDeadline",
     value: function renderEventDeadline(e) {
       return formatDate(new Date(e.deadline));
+    }
+  }, {
+    key: "renderEventSocial",
+    value: function renderEventSocial(e, v) {
+      var facebookShareHtml = v.querySelector('[data-share="facebook"]');
+      var linkedinShareHtml = v.querySelector('[data-share="linkedin"]');
+      var twitterShareHtml = v.querySelector('[data-share="twitter"]');
+
+      if (facebookShareHtml !== null) {
+        setProperty(facebookShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_FACEBOOK));
+      }
+
+      if (linkedinShareHtml !== null) {
+        setProperty(linkedinShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_LINKEDIN));
+      }
+
+      if (twitterShareHtml !== null) {
+        setProperty(twitterShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_TWITTER));
+      }
+    }
+  }, {
+    key: "prepareSocialUrl",
+    value: function prepareSocialUrl(e, url) {
+      url = url.replace('[title]', e.title);
+      url = url.replace('[summary]', e.summary);
+      return url;
     }
   }, {
     key: "bindEventEvents",
