@@ -361,8 +361,10 @@ class VanHack {
         this.loader = new Loader()
         this.renderer = renderer
         this.selector = '[data-role="events"]'
+        this.selectorHighlight = '[data-role="events-highlight"]'
         this.typeSelector = '[data-role="event-types"]'
         this.container = this.renderer.getElement(this.selector, false)
+        this.containerHighlight = this.renderer.getElement(this.selectorHighlight, false)
         this.typesContainer = this.renderer.getElement(this.typeSelector, false)
         this.user = user
     }
@@ -536,6 +538,7 @@ class VanHack {
     renderEvent(id) {
         const block = this.renderer.getTemplate('eventBlock')
         const event = this.getEvent(id)
+        const type = this.getTypeBySlug(event.type)
         
         this.renderEventProps(event, block)
 
@@ -543,7 +546,11 @@ class VanHack {
 
         event.applied && this.disableEventApplyButton(block)
 
-        this.container.appendChild(block)
+        if (type.highlight === true) {
+            this.containerHighlight.appendChild(block)
+        } else {
+            this.container.appendChild(block)
+        }
     }
 
     renderEventProps(event, view) {

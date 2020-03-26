@@ -609,8 +609,10 @@ var VanHack = /*#__PURE__*/function () {
     this.loader = new Loader();
     this.renderer = renderer;
     this.selector = '[data-role="events"]';
+    this.selectorHighlight = '[data-role="events-highlight"]';
     this.typeSelector = '[data-role="event-types"]';
     this.container = this.renderer.getElement(this.selector, false);
+    this.containerHighlight = this.renderer.getElement(this.selectorHighlight, false);
     this.typesContainer = this.renderer.getElement(this.typeSelector, false);
     this.user = user;
   }
@@ -818,10 +820,16 @@ var VanHack = /*#__PURE__*/function () {
     value: function renderEvent(id) {
       var block = this.renderer.getTemplate('eventBlock');
       var event = this.getEvent(id);
+      var type = this.getTypeBySlug(event.type);
       this.renderEventProps(event, block);
       this.bindEventEvents(id, block);
       event.applied && this.disableEventApplyButton(block);
-      this.container.appendChild(block);
+
+      if (type.highlight === true) {
+        this.containerHighlight.appendChild(block);
+      } else {
+        this.container.appendChild(block);
+      }
     }
   }, {
     key: "renderEventProps",
