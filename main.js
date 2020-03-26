@@ -416,6 +416,14 @@ class VanHack {
         const modal = new Modal()
         const view = this.renderer.getTemplate('eventDetails')
 
+        this.renderEventProps(event, view)
+
+        if (event.applied) {
+            this.disableEventApplyButton(view)
+        }
+
+        this.bindEvents(event.id, view)
+
         modal.setContent(view)
         modal.show()
     }
@@ -438,10 +446,9 @@ class VanHack {
      * @param {object} event 
      */
     disableEventApplying(event) {
-        const eventView = this.container.querySelector(`[data-event-id="${event.id}"]`)
-        if (eventView !== null) {
-            console.log(eventView)
-            this.disableEventApplyButton(eventView)
+        const eventView = document.querySelectorAll(`[data-event-id="${event.id}"]`)
+        if (eventView !== null && eventView.length !== 0) {
+            eventView.forEach(v => this.disableEventApplyButton(v))
         }
     }
 
@@ -466,12 +473,23 @@ class VanHack {
     renderEvent(id) {
         const block = this.renderer.getTemplate('eventBlock')
         const event = this.getEvent(id)
+        
+        this.renderEventProps(event, block)
+
+        this.bindEvents(id, block)
+
+        event.applied && this.disableEventApplyButton(block)
+
+        this.container.appendChild(block)
+    }
+
+    renderEventProps(event, view) {
         const self = this
 
         Object.keys(event).forEach(k => {
-            const e = block.querySelector(`[data-render-prop="${k}"]`)
+            const e = view.querySelector(`[data-render-prop="${k}"]`)
             if (`render${ucfirst(k)}` in self) {
-                const r = self[`render${ucfirst(k)}`](event, block)
+                const r = self[`render${ucfirst(k)}`](event, view)
                 if (r && e !== null) {
                     e.innerHTML = r
                 }
@@ -480,13 +498,7 @@ class VanHack {
             }            
         })
 
-        block.setAttribute('data-event-id', event.id)
-
-        this.bindEvents(id, block)
-
-        event.applied && this.disableEventApplyButton(block)
-
-        this.container.appendChild(block)
+        view.setAttribute('data-event-id', event.id)
     }
 
     renderId(e, v) {
@@ -503,6 +515,14 @@ class VanHack {
 
         this.renderCategory(e, v)
         this.renderDateInfo(e, v)
+    }
+
+    renderTitle(e) {
+        return e.title
+    }
+
+    renderContent(e) {
+        return e.description
     }
 
     renderDateInfo(e, v) {

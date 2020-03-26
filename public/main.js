@@ -684,6 +684,13 @@ var VanHack = /*#__PURE__*/function () {
     value: function showEvent(event) {
       var modal = new Modal();
       var view = this.renderer.getTemplate('eventDetails');
+      this.renderEventProps(event, view);
+
+      if (event.applied) {
+        this.disableEventApplyButton(view);
+      }
+
+      this.bindEvents(event.id, view);
       modal.setContent(view);
       modal.show();
     }
@@ -710,11 +717,14 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "disableEventApplying",
     value: function disableEventApplying(event) {
-      var eventView = this.container.querySelector("[data-event-id=\"".concat(event.id, "\"]"));
+      var _this5 = this;
 
-      if (eventView !== null) {
-        console.log(eventView);
-        this.disableEventApplyButton(eventView);
+      var eventView = document.querySelectorAll("[data-event-id=\"".concat(event.id, "\"]"));
+
+      if (eventView !== null && eventView.length !== 0) {
+        eventView.forEach(function (v) {
+          return _this5.disableEventApplyButton(v);
+        });
       }
     }
     /**
@@ -744,12 +754,20 @@ var VanHack = /*#__PURE__*/function () {
     value: function renderEvent(id) {
       var block = this.renderer.getTemplate('eventBlock');
       var event = this.getEvent(id);
+      this.renderEventProps(event, block);
+      this.bindEvents(id, block);
+      event.applied && this.disableEventApplyButton(block);
+      this.container.appendChild(block);
+    }
+  }, {
+    key: "renderEventProps",
+    value: function renderEventProps(event, view) {
       var self = this;
       Object.keys(event).forEach(function (k) {
-        var e = block.querySelector("[data-render-prop=\"".concat(k, "\"]"));
+        var e = view.querySelector("[data-render-prop=\"".concat(k, "\"]"));
 
         if ("render".concat(ucfirst(k)) in self) {
-          var r = self["render".concat(ucfirst(k))](event, block);
+          var r = self["render".concat(ucfirst(k))](event, view);
 
           if (r && e !== null) {
             e.innerHTML = r;
@@ -758,10 +776,7 @@ var VanHack = /*#__PURE__*/function () {
           e.innerHTML = event[k];
         }
       });
-      block.setAttribute('data-event-id', event.id);
-      this.bindEvents(id, block);
-      event.applied && this.disableEventApplyButton(block);
-      this.container.appendChild(block);
+      view.setAttribute('data-event-id', event.id);
     }
   }, {
     key: "renderId",
@@ -783,6 +798,16 @@ var VanHack = /*#__PURE__*/function () {
 
       this.renderCategory(e, v);
       this.renderDateInfo(e, v);
+    }
+  }, {
+    key: "renderTitle",
+    value: function renderTitle(e) {
+      return e.title;
+    }
+  }, {
+    key: "renderContent",
+    value: function renderContent(e) {
+      return e.description;
     }
   }, {
     key: "renderDateInfo",
@@ -843,20 +868,20 @@ var VanHack = /*#__PURE__*/function () {
   }, {
     key: "bindEvents",
     value: function bindEvents(id, v) {
-      var _this5 = this;
+      var _this6 = this;
 
       var actionView = v.querySelector('[data-action="view"]');
       var actionApply = v.querySelector('[data-action="apply"]');
 
       if (actionView !== null) {
         actionView.addEventListener('click', function () {
-          return _this5.onViewHandler(id);
+          return _this6.onViewHandler(id);
         });
       }
 
       if (actionApply !== null) {
         actionApply.addEventListener('click', function () {
-          return _this5.onApplyHandler(id);
+          return _this6.onApplyHandler(id);
         });
       }
     }
