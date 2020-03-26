@@ -6,15 +6,21 @@
  * a small exercise for the VanHack recruiting program.
  */
 
+// For this exercise, I implemented a small json-api deployed to ZEIT Now
 const API_ENDPOINT = 'https://vanhack-events.now.sh'
 const EVENTS_API_ENDPOINT = `${API_ENDPOINT}/events`
 const EVENTS_TYPES_API_ENDPOINT = `${API_ENDPOINT}/types`
 
+// Screen size for medium devices
+const SCREEN_SIZE_MD = 768
+
+// Constants to create social urls to share events
+// Facebook and LinkedIn will not work as expected, because they
+// some url properties are deprecated now. The way to do this is using external
+// JavaScript and for this exercise I wanted to use only vanilla JavaScript
 const SOCIAL_SHARE_LINKEDIN = 'https://www.linkedin.com/shareArticle?mini=true&url=https://vanhack.com&title=[title]&summary=[summary]&source=VanHack'
 const SOCIAL_SHARE_FACEBOOK = 'https://www.facebook.com/sharer.php?u=https://vanhack.com&title=[title]&summary=[summary]'
 const SOCIAL_SHARE_TWITTER = 'https://twitter.com/intent/tweet?url=https://vanhack.com&text=[summary]&hashtags=vanhack'
-
-const SCREEN_SIZE_MD = 768
 
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
@@ -241,6 +247,9 @@ class Loader {
         this.wrapper.appendChild(this.element)
     }
 
+    /**
+     * Hide de spinner removing it from the parent (wrapper)
+     */
     hide() {
         if (this.wrapper !== null) {
             this.wrapper.removeChild(this.element);
@@ -268,10 +277,6 @@ class Modal {
         this.bindEvents()
     }
 
-    hide() {
-        addClass(this.el, 'hidden')
-    }
-
     show() {
         if (this.isShown === true) {
             throw new Error('The modal window is already visible')
@@ -283,6 +288,10 @@ class Modal {
         addClass(document.body, 'overflow-hidden')
 
         this.isShown = true
+    }
+
+    hide() {
+        addClass(this.el, 'hidden')
     }
 
     setContent(content) {
@@ -407,6 +416,11 @@ class VanHack {
             })
     }
 
+    /**
+     * Return the event type if exists for the given slug
+     * 
+     * @param {string} slug 
+     */
     getTypeBySlug(slug) {
         if ((slug in this.types) === false) {
             return null
@@ -414,6 +428,11 @@ class VanHack {
         return this.types[slug]
     }
 
+    /**
+     * Show (render) all the event types
+     * 
+     * @param {object} types 
+     */
     showTypes(types) {
         this.types = types
 
@@ -495,12 +514,19 @@ class VanHack {
             this.disableEventApplyButton(view)
         }
 
-        this.bindEventEvents(event.id, view)
+        this.bindEventEvents(event, view)
 
         modal.setContent(view)
         modal.show()
     }
 
+    /**
+     * Callback to disable/enable apply buttons depending if
+     * the event is for premium users or not
+     * 
+     * @param {Event} event 
+     * @param {object} view 
+     */
     processPremiumEvent(event, view) {
         const applyNoPremium = view.querySelectorAll('[data-premium="false"]')
         const applyPremiumOnly = view.querySelectorAll('[data-premium="true"]')
@@ -565,7 +591,7 @@ class VanHack {
         
         this.renderEventProps(event, block)
 
-        this.bindEventEvents(id, block)
+        this.bindEventEvents(event, block)
 
         event.applied && this.disableEventApplyButton(block)
 
@@ -578,6 +604,13 @@ class VanHack {
         }
     }
 
+    /**
+     * Renders all the properties of the event that are
+     * present in the html view of the event
+     * 
+     * @param {Event} event 
+     * @param {object} view 
+     */
     renderEventProps(event, view) {
         const self = this
 
@@ -596,6 +629,12 @@ class VanHack {
         setProperty(view, 'data-event-id', event.id)
     }
 
+    /**
+     * Renders multiple properties of the event
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
     renderEventId(e, v) {
         const startMonthHtml = v.querySelector('[data-prop="start-month"]')
         const startDayHtml = v.querySelector('[data-prop="start-day"]')
@@ -613,20 +652,43 @@ class VanHack {
         this.renderEventSocial(e, v)
     }
 
+    /**
+     * Render the event title
+     * 
+     * @param {Event} e 
+     */
     renderEventTitle(e) {
         return e.title
     }
 
+    /**
+     * Renders the event thumbnail
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     * @param {object} el 
+     */
     renderEventThumbnail(e, v, el) {
         if (el !== null) {
             setProperty(el, 'src', e.thumbnail)
         }
     }
 
+    /**
+     * Renders the event content
+     * 
+     * @param {Event} e 
+     */
     renderEventContent(e) {
         return e.description
     }
 
+    /**
+     * Renders date information of the event
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
     renderEventDateInfo(e, v) {
         const startDate = new Date(e.start)
         const endDate = new Date(e.end)
@@ -661,6 +723,12 @@ class VanHack {
         }
     }
 
+    /**
+     * Renders the event category
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
     renderEventCategory(e, v) {
         const categoryHtml = v.querySelector('[data-prop="category"]')
         if (categoryHtml !== null) {
@@ -677,14 +745,30 @@ class VanHack {
         }
     }
 
+    /**
+     * Renders the event location information
+     * 
+     * @param {Event} e 
+     */
     renderEventLocation(e) {
         return `${e.location.city}, ${e.location.country}`
     }
 
+    /**
+     * Renders the event deadline date
+     * 
+     * @param {Event} e 
+     */
     renderEventDeadline(e) {
         return formatDate(new Date(e.deadline))
     }
 
+    /**
+     * Renders the event social links for sharing
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
     renderEventSocial(e, v) {
         const facebookShareHtml = v.querySelector('[data-share="facebook"]')
         const linkedinShareHtml = v.querySelector('[data-share="linkedin"]')
@@ -703,6 +787,13 @@ class VanHack {
         }
     }
 
+    /**
+     * This function takes a social url and replace special tokens
+     * depending of the properties of the given event
+     * 
+     * @param {Event} e 
+     * @param {string} url 
+     */
     prepareSocialUrl(e, url) {
         url = url.replace('[title]', e.title)
         url = url.replace('[summary]', e.summary)
@@ -710,24 +801,40 @@ class VanHack {
         return url
     }
 
-    bindEventEvents(id, v) {
+    /**
+     * Binds events for interaction
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+    bindEventEvents(e, v) {
         const actionView = v.querySelectorAll('[data-action="view"]')
         const actionApply = v.querySelectorAll('[data-action="apply"]')
 
         if (actionView !== null && actionView.length !== 0) {
-            actionView.forEach(a => a.addEventListener('click', () => this.onViewHandler(id)))
+            actionView.forEach(a => a.addEventListener('click', () => this.onViewHandler(e.id)))
         }
 
         if (actionApply !== null && actionApply.length !== 0) {
-            actionApply.forEach(a => a.addEventListener('click', () => this.onApplyHandler(id)))
+            actionApply.forEach(a => a.addEventListener('click', () => this.onApplyHandler(e.id)))
         }
     }
 
+    /**
+     * Handler callback executed when the user clicks 'More details'
+     * 
+     * @param {int} id The event id
+     */
     onViewHandler(id) {
         const event = this.getEvent(id)
         this.showEvent(event)
     }
 
+    /**
+     * Handler callback executed when the user clicks 'Apply'
+     * 
+     * @param {int} id The event id
+     */
     onApplyHandler(id) {
         const event = this.getEvent(id)
 
@@ -738,6 +845,12 @@ class VanHack {
         }
     }
 
+    /**
+     * Shows the premium information to the user when wants
+     * to apply to a premium event
+     * 
+     * @param {Event} event 
+     */
     showPremiumNotice(event) {
         const premiumNoticeHtml = this.renderer.getTemplate('premiumNotice')
         const premiumButton = premiumNoticeHtml.querySelector('[data-action="go"]')

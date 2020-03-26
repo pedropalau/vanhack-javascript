@@ -140,13 +140,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * production or big programs because this was implemented only to solve
  * a small exercise for the VanHack recruiting program.
  */
+// For this exercise, I implemented a small json-api deployed to ZEIT Now
 var API_ENDPOINT = 'https://vanhack-events.now.sh';
 var EVENTS_API_ENDPOINT = "".concat(API_ENDPOINT, "/events");
-var EVENTS_TYPES_API_ENDPOINT = "".concat(API_ENDPOINT, "/types");
+var EVENTS_TYPES_API_ENDPOINT = "".concat(API_ENDPOINT, "/types"); // Screen size for medium devices
+
+var SCREEN_SIZE_MD = 768; // Constants to create social urls to share events
+// Facebook and LinkedIn will not work as expected, because they
+// some url properties are deprecated now. The way to do this is using external
+// JavaScript and for this exercise I wanted to use only vanilla JavaScript
+
 var SOCIAL_SHARE_LINKEDIN = 'https://www.linkedin.com/shareArticle?mini=true&url=https://vanhack.com&title=[title]&summary=[summary]&source=VanHack';
 var SOCIAL_SHARE_FACEBOOK = 'https://www.facebook.com/sharer.php?u=https://vanhack.com&title=[title]&summary=[summary]';
 var SOCIAL_SHARE_TWITTER = 'https://twitter.com/intent/tweet?url=https://vanhack.com&text=[summary]&hashtags=vanhack';
-var SCREEN_SIZE_MD = 768;
 /**---------------------------------------------------------------
  * Utilities and functions to be used inside this program,
  * for example to work with XMLHttpRequest.
@@ -455,6 +461,10 @@ var Loader = /*#__PURE__*/function () {
       this.wrapper = wrapper;
       this.wrapper.appendChild(this.element);
     }
+    /**
+     * Hide de spinner removing it from the parent (wrapper)
+     */
+
   }, {
     key: "hide",
     value: function hide() {
@@ -492,11 +502,6 @@ var Modal = /*#__PURE__*/function () {
   }
 
   _createClass(Modal, [{
-    key: "hide",
-    value: function hide() {
-      addClass(this.el, 'hidden');
-    }
-  }, {
     key: "show",
     value: function show() {
       if (this.isShown === true) {
@@ -507,6 +512,11 @@ var Modal = /*#__PURE__*/function () {
       this.wrapper.appendChild(this.el);
       addClass(document.body, 'overflow-hidden');
       this.isShown = true;
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      addClass(this.el, 'hidden');
     }
   }, {
     key: "setContent",
@@ -669,6 +679,12 @@ var VanHack = /*#__PURE__*/function () {
         _this4.hideLoader();
       });
     }
+    /**
+     * Return the event type if exists for the given slug
+     * 
+     * @param {string} slug 
+     */
+
   }, {
     key: "getTypeBySlug",
     value: function getTypeBySlug(slug) {
@@ -678,6 +694,12 @@ var VanHack = /*#__PURE__*/function () {
 
       return this.types[slug];
     }
+    /**
+     * Show (render) all the event types
+     * 
+     * @param {object} types 
+     */
+
   }, {
     key: "showTypes",
     value: function showTypes(types) {
@@ -772,10 +794,18 @@ var VanHack = /*#__PURE__*/function () {
         this.disableEventApplyButton(view);
       }
 
-      this.bindEventEvents(event.id, view);
+      this.bindEventEvents(event, view);
       modal.setContent(view);
       modal.show();
     }
+    /**
+     * Callback to disable/enable apply buttons depending if
+     * the event is for premium users or not
+     * 
+     * @param {Event} event 
+     * @param {object} view 
+     */
+
   }, {
     key: "processPremiumEvent",
     value: function processPremiumEvent(event, view) {
@@ -862,7 +892,7 @@ var VanHack = /*#__PURE__*/function () {
       var event = this.getEvent(id);
       var type = this.getTypeBySlug(event.type);
       this.renderEventProps(event, block);
-      this.bindEventEvents(id, block);
+      this.bindEventEvents(event, block);
       event.applied && this.disableEventApplyButton(block);
       this.processPremiumEvent(event, block);
 
@@ -872,6 +902,14 @@ var VanHack = /*#__PURE__*/function () {
         this.container.appendChild(block);
       }
     }
+    /**
+     * Renders all the properties of the event that are
+     * present in the html view of the event
+     * 
+     * @param {Event} event 
+     * @param {object} view 
+     */
+
   }, {
     key: "renderEventProps",
     value: function renderEventProps(event, view) {
@@ -891,6 +929,13 @@ var VanHack = /*#__PURE__*/function () {
       });
       setProperty(view, 'data-event-id', event.id);
     }
+    /**
+     * Renders multiple properties of the event
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+
   }, {
     key: "renderEventId",
     value: function renderEventId(e, v) {
@@ -913,11 +958,25 @@ var VanHack = /*#__PURE__*/function () {
       this.renderEventDateInfo(e, v);
       this.renderEventSocial(e, v);
     }
+    /**
+     * Render the event title
+     * 
+     * @param {Event} e 
+     */
+
   }, {
     key: "renderEventTitle",
     value: function renderEventTitle(e) {
       return e.title;
     }
+    /**
+     * Renders the event thumbnail
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     * @param {object} el 
+     */
+
   }, {
     key: "renderEventThumbnail",
     value: function renderEventThumbnail(e, v, el) {
@@ -925,11 +984,24 @@ var VanHack = /*#__PURE__*/function () {
         setProperty(el, 'src', e.thumbnail);
       }
     }
+    /**
+     * Renders the event content
+     * 
+     * @param {Event} e 
+     */
+
   }, {
     key: "renderEventContent",
     value: function renderEventContent(e) {
       return e.description;
     }
+    /**
+     * Renders date information of the event
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+
   }, {
     key: "renderEventDateInfo",
     value: function renderEventDateInfo(e, v) {
@@ -967,6 +1039,13 @@ var VanHack = /*#__PURE__*/function () {
         dateHtml.innerHTML = "This event will take place between ".concat(formatDate(startDate, startFormat), " and ").concat(formatDate(endDate, endFormat));
       }
     }
+    /**
+     * Renders the event category
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+
   }, {
     key: "renderEventCategory",
     value: function renderEventCategory(e, v) {
@@ -984,16 +1063,35 @@ var VanHack = /*#__PURE__*/function () {
         }
       }
     }
+    /**
+     * Renders the event location information
+     * 
+     * @param {Event} e 
+     */
+
   }, {
     key: "renderEventLocation",
     value: function renderEventLocation(e) {
       return "".concat(e.location.city, ", ").concat(e.location.country);
     }
+    /**
+     * Renders the event deadline date
+     * 
+     * @param {Event} e 
+     */
+
   }, {
     key: "renderEventDeadline",
     value: function renderEventDeadline(e) {
       return formatDate(new Date(e.deadline));
     }
+    /**
+     * Renders the event social links for sharing
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+
   }, {
     key: "renderEventSocial",
     value: function renderEventSocial(e, v) {
@@ -1013,6 +1111,14 @@ var VanHack = /*#__PURE__*/function () {
         setProperty(twitterShareHtml, 'href', this.prepareSocialUrl(e, SOCIAL_SHARE_TWITTER));
       }
     }
+    /**
+     * This function takes a social url and replace special tokens
+     * depending of the properties of the given event
+     * 
+     * @param {Event} e 
+     * @param {string} url 
+     */
+
   }, {
     key: "prepareSocialUrl",
     value: function prepareSocialUrl(e, url) {
@@ -1020,9 +1126,16 @@ var VanHack = /*#__PURE__*/function () {
       url = url.replace('[summary]', e.summary);
       return url;
     }
+    /**
+     * Binds events for interaction
+     * 
+     * @param {Event} e 
+     * @param {object} v 
+     */
+
   }, {
     key: "bindEventEvents",
-    value: function bindEventEvents(id, v) {
+    value: function bindEventEvents(e, v) {
       var _this8 = this;
 
       var actionView = v.querySelectorAll('[data-action="view"]');
@@ -1031,7 +1144,7 @@ var VanHack = /*#__PURE__*/function () {
       if (actionView !== null && actionView.length !== 0) {
         actionView.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this8.onViewHandler(id);
+            return _this8.onViewHandler(e.id);
           });
         });
       }
@@ -1039,17 +1152,29 @@ var VanHack = /*#__PURE__*/function () {
       if (actionApply !== null && actionApply.length !== 0) {
         actionApply.forEach(function (a) {
           return a.addEventListener('click', function () {
-            return _this8.onApplyHandler(id);
+            return _this8.onApplyHandler(e.id);
           });
         });
       }
     }
+    /**
+     * Handler callback executed when the user clicks 'More details'
+     * 
+     * @param {int} id The event id
+     */
+
   }, {
     key: "onViewHandler",
     value: function onViewHandler(id) {
       var event = this.getEvent(id);
       this.showEvent(event);
     }
+    /**
+     * Handler callback executed when the user clicks 'Apply'
+     * 
+     * @param {int} id The event id
+     */
+
   }, {
     key: "onApplyHandler",
     value: function onApplyHandler(id) {
@@ -1061,6 +1186,13 @@ var VanHack = /*#__PURE__*/function () {
         this.applyForEvent(event);
       }
     }
+    /**
+     * Shows the premium information to the user when wants
+     * to apply to a premium event
+     * 
+     * @param {Event} event 
+     */
+
   }, {
     key: "showPremiumNotice",
     value: function showPremiumNotice(event) {
